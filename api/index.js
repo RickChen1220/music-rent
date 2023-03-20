@@ -2,16 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const webtoken = require('jsonwebtoken');
+const webtoken = require("jsonwebtoken");
 const User = require("./models/User.js");
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
-const tokenSecret = 'a1vsdfew321'
+const tokenSecret = "a1vsdfew321";
 
 app.use(express.json());
-//Need to install cookie parser to read cookie. 
+//Need to install cookie parser to read cookie.
 app.use(cookieParser());
 
 //Mongo Atlas username:musirent, password: WcvuGi1J1XE1S3sH
@@ -46,40 +46,44 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async(req,res) => {
-    const {email,password}= req.body;
-    const userDoc = await User.findOne({email})
-    if(userDoc) {
-        //check if the password is correspond to the user
-        //then resend a cookie (token) 
-        const passOk = bcrypt.compareSync(password, userDoc.password);
-        if (passOk) {
-        //sign is a jsonWebToken function
-          webtoken.sign({email:userDoc.email, id: userDoc._id}, tokenSecret, {}, (err, token) => {
-            if(err) throw err;
-            res.cookie('token', token).json(userDoc)
-          })
-         
-        }else{
-          res.status(422).json('pass No Ok')
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  const userDoc = await User.findOne({ email });
+  if (userDoc) {
+    //check if the password is correspond to the user
+    //then resend a cookie (token)
+    const passOk = bcrypt.compareSync(password, userDoc.password);
+    if (passOk) {
+      //sign is a jsonWebToken function
+      webtoken.sign(
+        { email: userDoc.email, id: userDoc._id },
+        tokenSecret,
+        {},
+        (err, token) => {
+          if (err) throw err;
+          res.cookie("token", token).json(userDoc);
         }
-    }else{
-        res.json('Failed')
+      );
+    } else {
+      res.status(422).json("pass No Ok");
     }
+  } else {
+    res.json("Failed");
+  }
 });
 
-app.get('/profile', (req,res) => {
-  const {token} = req.cookies;
-  if(token){
+app.get("/profile", (req, res) => {
+  const { token } = req.cookies;
+  if (token) {
     //Verify is a jsonWebToken function
-    webtoken.verify(token, tokenSecret,{}, (err,user) => {
+    webtoken.verify(token, tokenSecret, {}, async (err, userData) => {
       if (err) throw err;
-      res.json(user);
-    } )
-  }else{
+      const { name, email, id } = await User.findById(userData.id);
+      res.json({ name, email, id });
+    });
+  } else {
     res.json(null);
   }
-})
-
+});
 
 app.listen(4000);
