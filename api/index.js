@@ -2,13 +2,13 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const webtoken = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const User = require("./models/User.js");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
-const tokenSecret = "a1vsdfew321";
+const tokenSecret = "a1vsdfew321"; //create by myself
 
 app.use(express.json());
 //Need to install cookie parser to read cookie.
@@ -55,7 +55,7 @@ app.post("/login", async (req, res) => {
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
       //sign is a jsonWebToken function
-      webtoken.sign(
+      jwt.sign(
         { email: userDoc.email, id: userDoc._id },
         tokenSecret,
         {},
@@ -76,7 +76,7 @@ app.get("/profile", (req, res) => {
   const { token } = req.cookies;
   if (token) {
     //Verify is a jsonWebToken function
-    webtoken.verify(token, tokenSecret, {}, async (err, userData) => {
+    jwt.verify(token, tokenSecret, {}, async (err, userData) => {
       if (err) throw err;
       const { name, email, id } = await User.findById(userData.id);
       res.json({ name, email, id });
@@ -84,6 +84,11 @@ app.get("/profile", (req, res) => {
   } else {
     res.json(null);
   }
+});
+
+app.post("/logout", (req, res) => {
+  //set the cookie name "token" to ""
+  res.cookie("token", "").json(true);
 });
 
 app.listen(4000);
