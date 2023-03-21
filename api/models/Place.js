@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const RoomSchema = new Schema({
+const PlaceSchema = new Schema({
   owner: { type: Schema.Types.ObjectId, ref: "User" },
   title: String,
   address: String,
@@ -14,6 +14,6 @@ const RoomSchema = new Schema({
   maxGuests: Number,
 });
 
-const RoomModel = mongoos.model("Room", RoomSchema);
+const PlaceModel = mongoos.model("Place", PlaceSchema);
 
-module.exports = RoomModel;
+module.exports = PlaceModel;

@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import axios from "axios";
+import PlacesPage from "./PlacesPage";
 
 export default function AccountPage() {
   const { ready, user, setUser } = useContext(UserContext);
@@ -27,9 +28,11 @@ export default function AccountPage() {
   }
 
   function linkClasses(type = null) {
-    let classes = "py-2 px-6";
+    let classes = "py-2 px-6 rounded-xl";
     if (type === subpage) {
-      classes += " bg-primary text-white rounded-xl";
+      classes += " bg-primary text-white";
+    }else{
+      classes +=" bg-slate-300"
     }
     return classes;
   }
@@ -59,6 +62,12 @@ export default function AccountPage() {
           </button>
         </div>
       )}
+
+      {subpage === "places" && (
+       <PlacesPage />
+      )}
+
+
     </div>
   );
 }
