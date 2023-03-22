@@ -7,6 +7,7 @@ const PlaceSchema = new Schema({
   address: String,
   photos: [String],
   description: String,
+  facilities: String,
   price: [String],
   extraInfo: String,
   openTime: Number,
