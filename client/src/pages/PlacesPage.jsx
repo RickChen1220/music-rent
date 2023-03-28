@@ -16,20 +16,36 @@ export default function PlacesPage() {
   const [closeTime, setCloseTime] = useState("");
   const [maxGuests, setMaxGuests] = useState("1");
 
-  function inputHeader(text){
-    return(
-      <h2 className="text-2xl mt-4">{text}</h2>
-    );
-  };
+  function inputHeader(text) {
+    return <h2 className="text-2xl mt-4">{text}</h2>;
+  }
 
-  async function addPhotoByLink(e){
+  async function addPhotoByLink(e) {
     e.preventDefault();
-    const {data:filename} =  await axios.post("/upload-by-link", {link: photoLink});
+    const { data: filename } = await axios.post("/upload-by-link", {
+      link: photoLink,
+    });
     setAddedPhotos((pre) => {
       return [...pre, filename];
     });
     setPhotoLink("");
-  };
+  }
+
+  async function uploadPhoto(e) {
+    const files = e.target.files;
+    const data = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      data.append("photos", files[i]);
+    }
+
+    const { data: filename } = await axios.post("/upload", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    setAddedPhotos((pre) => {
+      return [...pre, filename];
+    });
+    setPhotoLink("");
+  }
 
   return (
     <div>
@@ -64,31 +80,59 @@ export default function PlacesPage() {
             {inputHeader("Title")}
             <input
               type="text"
-              value={title} onChange={(e) => {setTitle(e.target.value)}}
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
               placeholder="title, for example: Music Rent"
             ></input>
             {inputHeader("Address")}
-            <input type="text" value={address} onChange={(e) => {setAddress(e.target.value)}} placeholder="address"></input>
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => {
+                setAddress(e.target.value);
+              }}
+              placeholder="address"
+            ></input>
             {inputHeader("Photos")}
             <div className="flex gap-2">
               <input
                 type="text"
-                value={photoLink} onChange={(e) => {setPhotoLink(e.target.value)}}
+                value={photoLink}
+                onChange={(e) => {
+                  setPhotoLink(e.target.value);
+                }}
                 placeholder="Link for your photo ....jpg"
               ></input>
-              <button className="border bg-slate-300 rounded-2xl p-2" onClick={addPhotoByLink}>
+              <button
+                className="border bg-slate-300 rounded-2xl p-2"
+                onClick={addPhotoByLink}
+              >
                 Add&nbsp;photo
               </button>
             </div>
-            <div className=" mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-              {addedPhotos.length > 0 && addedPhotos.map((link) => {return(
-                <div>
-                  {link}
-                </div>
-              )
-                
-              })}
-              <button className="flex justify-center gap-1 border rounded-2xl p-6 text-2xl bg-primary text-white">
+            <div className=" mt-2 grid gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+              {/* Add photo by link */}
+              {addedPhotos.length > 0 &&
+                addedPhotos.map((link) => {
+                  return (
+                    <div>
+                      <img
+                        className="rounded-2xl"
+                        src={"http://localhost:4000/uploads/" + link}
+                      />
+                    </div>
+                  );
+                })}
+              {/* Add photo from local */}
+              <label className="flex items-center justify-center gap-1 border rounded-2xl p-2 text-2xl  bg-slate-100 cursor-pointer">
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={uploadPhoto}
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -104,27 +148,54 @@ export default function PlacesPage() {
                   />
                 </svg>
                 Upload
-              </button>
+              </label>
             </div>
             {inputHeader("Description")}
-            <textarea value={description} onChange={(e) =>setDescription(e.target.value)} />
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
             {inputHeader("Facilities")}
-             <Facilities selected={facilities} onChanged={setFacilities}/>
+            <Facilities selected={facilities} onChanged={setFacilities} />
             {inputHeader("Extra Info")}
-            <textarea value={extraInfo} onChange={(e) =>setExtraInfo(e.target.value)} />
+            <textarea
+              value={extraInfo}
+              onChange={(e) => setExtraInfo(e.target.value)}
+            />
             {inputHeader("Open and close times")}
             <div className="grid sm:grid-cols-3 gap-3">
               <div>
                 <h3 className="mt-2 -mb-1">Open time</h3>
-                <input type="text" value={openTime} onChange={(e)=>{setOpenTime(e.target.value)}} placeholder="09:00" />
+                <input
+                  type="text"
+                  value={openTime}
+                  onChange={(e) => {
+                    setOpenTime(e.target.value);
+                  }}
+                  placeholder="09:00"
+                />
               </div>
               <div>
                 <h3 className="mt-2 -mb-1">Close time</h3>
-                <input type="text" value={closeTime} onChange={(e)=>{setCloseTime(e.target.value)}} placeholder="21:00" />
+                <input
+                  type="text"
+                  value={closeTime}
+                  onChange={(e) => {
+                    setCloseTime(e.target.value);
+                  }}
+                  placeholder="21:00"
+                />
               </div>
               <div>
                 <h3 className="mt-2 -mb-1">Max number of guests</h3>
-                <input type="number" value={maxGuests} onChange={(e)=>{setMaxGuests(e.target.value)}} placeholder="2" />
+                <input
+                  type="number"
+                  value={maxGuests}
+                  onChange={(e) => {
+                    setMaxGuests(e.target.value);
+                  }}
+                  placeholder="2"
+                />
               </div>
             </div>
             <div>
