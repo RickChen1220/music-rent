@@ -38,11 +38,11 @@ export default function PlacesPage() {
       data.append("photos", files[i]);
     }
 
-    const { data: filename } = await axios.post("/upload", data, {
+    const { data: filenames } = await axios.post("/upload", data, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     setAddedPhotos((pre) => {
-      return [...pre, filename];
+      return [...pre, ...filenames];
     });
     setPhotoLink("");
   }
@@ -113,20 +113,20 @@ export default function PlacesPage() {
               </button>
             </div>
             <div className=" mt-2 grid gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-              {/* Add photo by link */}
+              {/* Show photo add by link and device */}
               {addedPhotos.length > 0 &&
                 addedPhotos.map((link) => {
                   return (
-                    <div>
+                    <div className="h-32 flex">
                       <img
-                        className="rounded-2xl"
+                        className="rounded-2xl w-full object-cover"
                         src={"http://localhost:4000/uploads/" + link}
                       />
                     </div>
                   );
                 })}
               {/* Add photo from local */}
-              <label className="flex items-center justify-center gap-1 border rounded-2xl p-2 text-2xl  bg-slate-100 cursor-pointer">
+              <label className="flex h-32 items-center justify-center gap-1 border rounded-2xl p-2 text-2xl  bg-slate-100 cursor-pointer">
                 <input
                   type="file"
                   multiple

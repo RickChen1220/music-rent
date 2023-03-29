@@ -107,7 +107,7 @@ app.post("/upload-by-link", async (req, res) => {
   res.json(newName);
 });
 
-const photosMiddleware = multer({ dest: "uploads" });
+const photosMiddleware = multer({ dest: "uploads/" });
 app.post("/upload", photosMiddleware.array("photos", 10), (req, res) => {
   const uploadedFiles = [];
   //grab the path and originalname(ext) from each files and rename it to + ext
@@ -119,7 +119,8 @@ app.post("/upload", photosMiddleware.array("photos", 10), (req, res) => {
     const newPath = path + "." + ext;
     //rename path with newPath
     fs.renameSync(path, newPath);
-    uploadedFiles.push(newPath);
+    //replace the duplicate uploads/ name in the path with empty string
+    uploadedFiles.push(newPath.replace("uploads/", ""));
   }
   res.json(uploadedFiles);
 });
