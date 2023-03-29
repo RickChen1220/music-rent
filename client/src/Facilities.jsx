@@ -1,12 +1,19 @@
-export default function Facilities({ selected, onChanged }) {
-  function handleClick(e) {}
+export default function Facilities({ selected, onChange }) {
+  function handleClick(e) {
+    const {checked, name} = e.target;
+    if (checked){
+      onChange([...selected, name]);
+    }else {
+      onChange([...selected.filter((selectedName) => selectedName !== name)])
+    }
+  }
   return (
     <div>
       <div className="grid mt-2 gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
         <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
           <input
             type="checkbox"
-            name="microphone"
+            name="air"
             onChange={handleClick}
             className="flex"
           />
@@ -28,7 +35,7 @@ export default function Facilities({ selected, onChanged }) {
           <span>Air conditioning</span>
         </label>
         <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-          <input type="checkbox" name="microphone" onChange={handleClick} />
+          <input type="checkbox" name="piano" onChange={handleClick} />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -56,7 +63,7 @@ export default function Facilities({ selected, onChanged }) {
           <span>Piano</span>
         </label>
         <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-          <input type="checkbox" name="microphone" onChange={handleClick} />
+          <input type="checkbox" name="stand" onChange={handleClick} />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -73,7 +80,7 @@ export default function Facilities({ selected, onChanged }) {
           <span>Music stand</span>
         </label>
         <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-          <input type="checkbox" name="microphone" onChange={handleClick} />
+          <input type="checkbox" name="amp" onChange={handleClick} />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -89,7 +96,7 @@ export default function Facilities({ selected, onChanged }) {
           <span>Guitar amplifier</span>
         </label>
         <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-          <input type="checkbox" name="microphone" onChange={handleClick} />
+          <input type="checkbox" name="drum" onChange={handleClick} />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -104,7 +111,7 @@ export default function Facilities({ selected, onChanged }) {
           <span>Drum set</span>
         </label>
         <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-          <input type="checkbox" name="microphone" onChange={handleClick} />
+          <input type="checkbox" name="mic" onChange={handleClick} />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

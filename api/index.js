@@ -120,9 +120,10 @@ app.post("/upload", photosMiddleware.array("photos", 10), (req, res) => {
     //rename path with newPath
     fs.renameSync(path, newPath);
     //replace the duplicate uploads/ name in the path with empty string
-    uploadedFiles.push(newPath.replace("uploads/", ""));
+    uploadedFiles.push(newPath.replace("uploads",""));
   }
-  res.json(uploadedFiles);
+  res.json(uploadedFiles); 
 });
+
 
 app.listen(4000);
