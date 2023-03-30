@@ -7,14 +7,14 @@ const PlaceSchema = new Schema({
   address: String,
   photos: [String],
   description: String,
-  facilities: String,
-  price: [String],
+  facilities: [String],
+  price: Number,
   extraInfo: String,
   openTime: Number,
   closeTime: Number,
   maxGuests: Number,
 });
 
-const PlaceModel = mongoos.model("Place", PlaceSchema);
+const PlaceModel = mongoose.model("Place", PlaceSchema);
 
 module.exports = PlaceModel;

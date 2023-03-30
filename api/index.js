@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User.js");
+const Place = require("./models/Place.js");
 const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
@@ -120,10 +121,40 @@ app.post("/upload", photosMiddleware.array("photos", 10), (req, res) => {
     //rename path with newPath
     fs.renameSync(path, newPath);
     //replace the duplicate uploads/ name in the path with empty string
-    uploadedFiles.push(newPath.replace("uploads",""));
+    uploadedFiles.push(newPath.replace("uploads", ""));
   }
-  res.json(uploadedFiles); 
+  res.json(uploadedFiles);
 });
 
+app.post("/places", (req, res) => {
+  const { token } = req.cookies;
+  const {
+    title,
+    address,
+    addedPhotos,
+    description,
+    facilities,
+    openTime,
+    closeTime,
+    maxGuests,
+    price,
+  } = req.body;
+  jwt.verify(token, tokenSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const placeDoc = await Place.create({
+      owner: userData.id,
+      title,
+      address,
+      addedPhotos,
+      description,
+      facilities,
+      openTime,
+      closeTime,
+      maxGuests,
+      price,
+    });
+    res.json(placeDoc);
+  });
+});
 
 app.listen(4000);

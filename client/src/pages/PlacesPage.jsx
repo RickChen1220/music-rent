@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import Facilities from "../Facilities";
 import axios from "axios";
 import PhotosUploader from "../PhotosUploader";
+import { Navigate } from "react-router-dom";
 
 export default function PlacesPage() {
   const { action } = useParams();
@@ -15,6 +16,7 @@ export default function PlacesPage() {
   const [openTime, setOpenTime] = useState("");
   const [closeTime, setCloseTime] = useState("");
   const [maxGuests, setMaxGuests] = useState("1");
+  const [price, setPrice] = useState("");
   const [redirect, setRedirect] = useState("");
 
   function inputHeader(text) {
@@ -26,7 +28,7 @@ export default function PlacesPage() {
      await axios.post("/places", {
       title, address, addedPhotos, 
       description, facilities, extraInfo, 
-      openTime, closeTime, maxGuests
+      openTime, closeTime, maxGuests, price,
     });
     setRedirect("/account/places");
   }
@@ -107,7 +109,7 @@ export default function PlacesPage() {
                   onChange={(e) => {
                     setOpenTime(e.target.value);
                   }}
-                  placeholder="09:00"
+                  placeholder="9"
                 />
               </div>
               <div>
@@ -118,7 +120,7 @@ export default function PlacesPage() {
                   onChange={(e) => {
                     setCloseTime(e.target.value);
                   }}
-                  placeholder="21:00"
+                  placeholder="21"
                 />
               </div>
               <div>
@@ -133,6 +135,15 @@ export default function PlacesPage() {
                 />
               </div>
             </div>
+            {inputHeader("Price/per hour")}
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => {
+                setPrice(e.target.value);
+              }}
+              placeholder="$200"
+            ></input>
             <div>
               <button className="primary my-4">Save</button>
             </div>
