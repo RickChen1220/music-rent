@@ -131,7 +131,7 @@ app.post("/places", (req, res) => {
   const {
     title,
     address,
-    addedPhotos,
+    photos: addedPhotos,
     description,
     facilities,
     openTime,
@@ -154,6 +154,14 @@ app.post("/places", (req, res) => {
       price,
     });
     res.json(placeDoc);
+  });
+});
+
+app.get("/places", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, tokenSecret, {}, async (err, userData) => {
+    const { id } = userData;
+    res.json(await Place.find({ owner: id }));
   });
 });
 
