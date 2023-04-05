@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PhotosUploader from "../PhotosUploader";
 import Facilities from "../Facilities";
 import AccountNav from "../AccountNav";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 export default function PlacesFormPage() {
+  const {id} = useParams();
+  console.log({id});
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);
@@ -17,26 +19,54 @@ export default function PlacesFormPage() {
   const [maxGuests, setMaxGuests] = useState("1");
   const [price, setPrice] = useState("");
   const [redirect, setRedirect] = useState(false);
+  useEffect(() => {
+    if(!id){
+      return;
+    }
+    axios.get("/places/"+id).then(response => {
+      const {data} = response;
+      setTitle(data.title);
+      setAddress(data.address);
+      setAddedPhotos(data.photos);
+      setDescription(data.description);
+      setFacilities(data.facilities);
+      setOpenTime(data.openTime);
+      setCloseTime(data.closeTime);
+      setMaxGuests(data.maxGuests);
+      setPrice(data.price);
+    })
+  },[id])
 
   function inputHeader(text) {
     return <h2 className="text-2xl mt-4">{text}</h2>;
   }
 
-  async function addNewPlace(e) {
+  async function savePlace(e) {
     e.preventDefault();
-    await axios.post("/places", {
-      title,
-      address,
-      addedPhotos,
-      description,
-      facilities,
-      extraInfo,
-      openTime,
-      closeTime,
-      maxGuests,
-      price,
-    });
-    setRedirect(true);
+    const placeDate = {
+        title,
+        address,
+        addedPhotos,
+        description,
+        facilities,
+        extraInfo,
+        openTime,
+        closeTime,
+        maxGuests,
+        price,
+    };
+    if (id) {
+      //update
+      await axios.put("/places", {
+        id,...placeDate
+      });
+      setRedirect(true);
+    } else{
+      //new place
+      await axios.post("/places", {placeDate});
+      setRedirect(true);
+    }
+
   }
 
   if (redirect) {
@@ -46,7 +76,7 @@ export default function PlacesFormPage() {
   return (
     <div>
       <AccountNav />
-      <form onSubmit={addNewPlace}>
+      <form onSubmit={savePlace}>
         {inputHeader("Title")}
         <input
           type="text"

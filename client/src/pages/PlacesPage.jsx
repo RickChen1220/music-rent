@@ -45,9 +45,9 @@ export default function PlacesPage() {
                 className="cursor-pointer gap-4 flex p-4 border m-4 bg-slate-200 rounded-2xl"
               >
                 {/*photo shoud not shrink  */}
-                <div className="w-32 h-32 bg-slate-100 shrink-0">
+                <div className="flex w-32 h-32 bg-slate-100 shrink-0">
                   {place.photos.length > 0 && (
-                    <img src={place.photos[0]} alt="" />
+                    <img className="object-cover" src={"http://localhost:4000/uploads/"+place.photos[0]} alt="" />
                   )}
                 </div>
                 {/*Content shoud not grow but shrink  */}
