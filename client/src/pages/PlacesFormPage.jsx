@@ -6,8 +6,8 @@ import axios from "axios";
 import { Navigate, useParams } from "react-router-dom";
 
 export default function PlacesFormPage() {
-  const {id} = useParams();
-  console.log({id});
+  const { id } = useParams();
+  console.log({ id });
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);
@@ -20,11 +20,11 @@ export default function PlacesFormPage() {
   const [price, setPrice] = useState("");
   const [redirect, setRedirect] = useState(false);
   useEffect(() => {
-    if(!id){
+    if (!id) {
       return;
     }
-    axios.get("/places/"+id).then(response => {
-      const {data} = response;
+    axios.get("/places/" + id).then((response) => {
+      const { data } = response;
       setTitle(data.title);
       setAddress(data.address);
       setAddedPhotos(data.photos);
@@ -34,8 +34,8 @@ export default function PlacesFormPage() {
       setCloseTime(data.closeTime);
       setMaxGuests(data.maxGuests);
       setPrice(data.price);
-    })
-  },[id])
+    });
+  }, [id]);
 
   function inputHeader(text) {
     return <h2 className="text-2xl mt-4">{text}</h2>;
@@ -44,29 +44,29 @@ export default function PlacesFormPage() {
   async function savePlace(e) {
     e.preventDefault();
     const placeDate = {
-        title,
-        address,
-        addedPhotos,
-        description,
-        facilities,
-        extraInfo,
-        openTime,
-        closeTime,
-        maxGuests,
-        price,
+      title,
+      address,
+      addedPhotos,
+      description,
+      facilities,
+      extraInfo,
+      openTime,
+      closeTime,
+      maxGuests,
+      price,
     };
     if (id) {
       //update
       await axios.put("/places", {
-        id,...placeDate
+        id,
+        ...placeDate,
       });
       setRedirect(true);
-    } else{
+    } else {
       //new place
-      await axios.post("/places", {placeDate});
+      await axios.post("/places", { placeDate });
       setRedirect(true);
     }
-
   }
 
   if (redirect) {
@@ -110,7 +110,7 @@ export default function PlacesFormPage() {
           onChange={(e) => setExtraInfo(e.target.value)}
         />
         {inputHeader("Open and close times")}
-        <div className="grid sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div>
             <h3 className="mt-2 -mb-1">Open time</h3>
             <input
@@ -144,19 +144,19 @@ export default function PlacesFormPage() {
               placeholder="2"
             />
           </div>
+          <div>
+            <h3 className="mt-2 -mb-1">Price per night</h3>
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => {
+                setPrice(e.target.value);
+              }}
+              placeholder="$200"
+            ></input>
+          </div>
         </div>
-        {inputHeader("Price/per hour")}
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => {
-            setPrice(e.target.value);
-          }}
-          placeholder="$200"
-        ></input>
-        <div>
-          <button className="primary my-4">Save</button>
-        </div>
+        <button className="primary my-4">Save</button>
       </form>
     </div>
   );

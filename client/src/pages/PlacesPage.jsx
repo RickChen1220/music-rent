@@ -6,7 +6,7 @@ import axios from "axios";
 export default function PlacesPage() {
   const [places, setPlaces] = useState("");
   useEffect(() => {
-    axios.get("/places").then(({ data }) => {
+    axios.get("/user-places").then(({ data }) => {
       setPlaces(data);
     });
   }, []);
@@ -47,7 +47,11 @@ export default function PlacesPage() {
                 {/*photo shoud not shrink  */}
                 <div className="flex w-32 h-32 bg-slate-100 shrink-0">
                   {place.photos.length > 0 && (
-                    <img className="object-cover" src={"http://localhost:4000/uploads/"+place.photos[0]} alt="" />
+                    <img
+                      className="object-cover"
+                      src={"http://localhost:4000/uploads/" + place.photos[0]}
+                      alt=""
+                    />
                   )}
                 </div>
                 {/*Content shoud not grow but shrink  */}
