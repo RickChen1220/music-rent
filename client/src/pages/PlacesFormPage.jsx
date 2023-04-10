@@ -33,6 +33,7 @@ export default function PlacesFormPage() {
       setOpenTime(data.openTime);
       setCloseTime(data.closeTime);
       setMaxGuests(data.maxGuests);
+      setExtraInfo(data.extraInfo);
       setPrice(data.price);
     });
   }, [id]);
