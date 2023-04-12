@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: { primary: "#ff4c30" },
+      backgroundColor: { "coustom-color": "#f7faf2" },
     },
   },
   plugins: [],
