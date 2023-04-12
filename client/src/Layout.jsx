@@ -14,6 +14,7 @@ export default function Layout() {
             Choose your favorie room near you with best facilities and
             Unbeatable price.
           </p>
+          <img src="/images/gp-1.jpg" alt="My Image" />
         </div>
       </div>
     </div>
