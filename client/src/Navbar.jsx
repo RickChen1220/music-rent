@@ -53,7 +53,7 @@ export default function Navbar() {
           </li>
           <li className="p-4">
             <Link
-              to={"/"}
+              to={"/room"}
               className=" text-gray-900 transition duration-300  hover:text-primary"
             >
               Room Models
@@ -86,19 +86,19 @@ export default function Navbar() {
                     clipRule="evenodd"
                   />
                 </svg>
+                {!!user && <div>{user.name}</div>}
               </div>
-              {!!user && <div>{user.name}</div>}
             </Link>
           </li>
         </ul>
       </div>
 
       <div onClick={handleNav} className="block md:hidden">
-        {!nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
+        {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
       </div>
       <div
         className={
-          !nav
+          nav
             ? "fixed left-0 top-0 w-[60%] h-full border-r border-r-gray-900 bg-slate-100 ease-in-out duration-500"
             : "fixed left-[-100%]"
         }
