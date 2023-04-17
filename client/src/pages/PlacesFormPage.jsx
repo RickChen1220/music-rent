@@ -7,7 +7,6 @@ import { Navigate, useParams } from "react-router-dom";
 
 export default function PlacesFormPage() {
   const { id } = useParams();
-  console.log({ id });
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);
@@ -44,7 +43,7 @@ export default function PlacesFormPage() {
 
   async function savePlace(e) {
     e.preventDefault();
-    const placeDate = {
+    const placeData = {
       title,
       address,
       addedPhotos,
@@ -60,12 +59,12 @@ export default function PlacesFormPage() {
       //update
       await axios.put("/places", {
         id,
-        ...placeDate,
+        ...placeData,
       });
       setRedirect(true);
     } else {
       //new place
-      await axios.post("/places", { placeDate });
+      await axios.post("/places", placeData);
       setRedirect(true);
     }
   }
@@ -82,18 +81,14 @@ export default function PlacesFormPage() {
         <input
           type="text"
           value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder="title, for example: Music Rent"
         ></input>
         {inputHeader("Address")}
         <input
           type="text"
           value={address}
-          onChange={(e) => {
-            setAddress(e.target.value);
-          }}
+          onChange={(e) => setAddress(e.target.value)}
           placeholder="address"
         ></input>
         {inputHeader("Photos")}
