@@ -9,6 +9,16 @@ export default function Navbar() {
   const handleNav = () => {
     setNav(!nav);
   };
+
+  const handleClickScroll = () => {
+    const element = document.getElementById("ourTeam");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+
+
   return (
     <header className="flex items-center justify-between">
       <nav className=" border-gray-200  rounded-2xl text-white">
@@ -62,6 +72,7 @@ export default function Navbar() {
           <li className="p-4">
             <Link
               to={"/#ourteam"}
+              onClick={handleClickScroll}
               className=" text-gray-900 transition duration-300  hover:text-primary"
             >
               Our Team

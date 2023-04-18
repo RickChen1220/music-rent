@@ -9,7 +9,7 @@ export default function Layout() {
         <Navbar />
         <Outlet />
       </div>
-      <div className="mt-auto">
+      <div>
         <Footer />
       </div>
     </div>

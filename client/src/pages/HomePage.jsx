@@ -24,7 +24,7 @@ export default function HomePage() {
   return (
     <div className="bg-custom-color">
       <div className="max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center p-6">
-        <p className="text-[#ff6130] font-bold p-2">Plan your practice now</p>
+        <p className="text-[#ff6130] font-bold p-2 md:text-xl">Plan your practice now</p>
         <h1 className="md:text-7xl sm:text-6xl text-4xl font-bold md:py-6">
           Grow with music.
         </h1>
@@ -94,7 +94,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      <div className="w-full py-[10rem] px-4" id="outTeam">
+      <div className="w-full py-[10rem] px-4" id="ourTeam">
         <div className=" mx-auot grid md:grid-cols-3 gap-8">
           <div className="w-full shadow-xl flex flex-col py-4 my-4 rounded-lg hover:scale-105 duration-300">
             <img

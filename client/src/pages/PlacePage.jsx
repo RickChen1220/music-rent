@@ -29,13 +29,17 @@ export default function PlacePage() {
         <div>
           <div className="my-2">
             <h2 className="font-semibold text-2xl">Description</h2>
-            {place.description}
+            <div className="my-6">
+              {place.description}
+            </div>
           </div>
+          <div className="">
           Open time: {place.openTime}
           <br />
           Close time: {place.closeTime}
           <br />
           Max number of guests: {place.maxGuests}
+          </div>
         </div>
         <div>
           <BookingWidget place={place} />
