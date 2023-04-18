@@ -94,7 +94,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      <div className="w-full py-[10rem] px-4">
+      <div className="w-full py-[10rem] px-4" id="outTeam">
         <div className=" mx-auot grid md:grid-cols-3 gap-8">
           <div className="w-full shadow-xl flex flex-col py-4 my-4 rounded-lg hover:scale-105 duration-300">
             <img

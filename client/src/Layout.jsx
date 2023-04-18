@@ -4,10 +4,14 @@ import Footer from "./Footer";
 
 export default function Layout() {
   return (
-    <div className="min-h-screen bg-coustom-color">
-      <Navbar />
-      <Outlet />
-      <Footer />
+    <div>
+      <div className="min-h-screen bg-coustom-color">
+        <Navbar />
+        <Outlet />
+      </div>
+      <div className="mt-auto">
+        <Footer />
+      </div>
     </div>
   );
 }

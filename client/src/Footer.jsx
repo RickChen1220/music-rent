@@ -15,33 +15,49 @@ export default function Footer() {
           the perfect facilities to meet your needs.
         </p>
         <div className="flex justify-between md:w-[75%] my-6">
-          <FaGithubSquare size={30} />
-          <FaFacebookSquare size={30} />
-          <FaInstagram size={30} />
-          <FaTwitterSquare size={30} />
+          <FaGithubSquare size={30} className="cursor-pointer" />
+          <FaFacebookSquare size={30} className="cursor-pointer" />
+          <FaInstagram size={30} className="cursor-pointer" />
+          <FaTwitterSquare size={30} className="cursor-pointer" />
         </div>
       </div>
       <div className="lg:col-span-2 flex justify-between">
         <div>
-          <h6 className="font-medium text-gray-700">Our Classes</h6>
+          <h6 className="text-xl font-medium text-gray-900">Our Classes</h6>
           <ul>
-            <li className="py-2 text-sm">Piano Classes</li>
-            <li className="py-2 text-sm">Guitar Classes</li>
-            <li className="py-2 text-sm">Vocal Classes</li>
-            <li className="py-2 text-sm">Violin Classes</li>
+            <li className="py-2 text-sm transition duration-300  hover:text-primary cursor-pointer">
+              Piano Classes
+            </li>
+            <li className="py-2 text-sm transition duration-300  hover:text-primary cursor-pointer">
+              Guitar Classes
+            </li>
+            <li className="py-2 text-sm transition duration-300  hover:text-primary cursor-pointer">
+              Vocal Classes
+            </li>
+            <li className="py-2 text-sm transition duration-300  hover:text-primary cursor-pointer">
+              Violin Classes
+            </li>
           </ul>
         </div>
         <div>
-          <h6 className="font-medium text-gray-700">Locations</h6>
+          <h6 className="text-xl font-medium text-gray-900">Locations</h6>
           <ul>
-            <li className="py-2 text-sm">Taichung</li>
-            <li className="py-2 text-sm">Tainan</li>
-            <li className="py-2 text-sm">Taipei</li>
-            <li className="py-2 text-sm">Kaohsiung</li>
+            <li className="py-2 text-sm transition duration-300  hover:text-primary cursor-pointer">
+              Taichung
+            </li>
+            <li className="py-2 text-sm transition duration-300  hover:text-primary cursor-pointer">
+              Tainan
+            </li>
+            <li className="py-2 text-sm transition duration-300  hover:text-primary cursor-pointer">
+              Taipei
+            </li>
+            <li className="py-2 text-sm transition duration-300  hover:text-primary cursor-pointer">
+              Kaohsiung
+            </li>
           </ul>
         </div>
         <div>
-          <h6 className="font-medium text-gray-700">Working Hours</h6>
+          <h6 className="text-xl font-medium text-gray-900">Working Hours</h6>
           <ul>
             <li className="py-2 text-sm">Monday - Friday:</li>
             <li className="py-2 text-sm">11:00am - 21:00pm</li>

@@ -61,7 +61,7 @@ export default function Navbar() {
           </li>
           <li className="p-4">
             <Link
-              to={"/"}
+              to={"/#ourteam"}
               className=" text-gray-900 transition duration-300  hover:text-primary"
             >
               Our Team

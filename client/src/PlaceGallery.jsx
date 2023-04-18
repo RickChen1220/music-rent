@@ -4,8 +4,8 @@ export default function PlaceGallery({ place }) {
   const [showAllPhotos, setShowAllPhotos] = useState(false);
   if (showAllPhotos) {
     return (
-      <div className="absolute inset-0 bg-slate-900 text-white min-h-screen">
-        <div className=" bg-slate-900 p-8 grid gap-4">
+      <div className="absolute inset-0 bg-coustom-color text-primary min-h-screen">
+        <div className=" bg-coustom-color p-8 grid gap-4">
           <div>
             <h2 className="text-3xl mr-48">Photos of {place.title}</h2>
             <button
@@ -32,7 +32,10 @@ export default function PlaceGallery({ place }) {
           {place?.photos?.length > 0 &&
             place.photos.map((photo) => (
               <div>
-                <img src={"http://localhost:4000/uploads/" + photo} />
+                <img
+                  src={"http://localhost:4000/uploads/" + photo}
+                  className="w-full h-full object-cover"
+                />
               </div>
             ))}
         </div>
@@ -47,7 +50,7 @@ export default function PlaceGallery({ place }) {
             <div>
               <img
                 onClick={() => setShowAllPhotos(true)}
-                className="aspect-square object-cover cursor-pointer"
+                className="aspect-square object-cover cursor-pointer  w-full h-full"
                 src={"http://localhost:4000/uploads/" + place.photos[0]}
               />
             </div>
