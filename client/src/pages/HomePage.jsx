@@ -1,5 +1,6 @@
 import { FaAngleUp } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import BarChart from "../BarChart";
 
 export default function HomePage() {
   const [isVisible, setIsVisble] = useState(false);
@@ -24,7 +25,9 @@ export default function HomePage() {
   return (
     <div className="bg-custom-color">
       <div className="max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center p-6">
-        <p className="text-[#ff6130] font-bold p-2 md:text-xl">Plan your practice now</p>
+        <p className="text-[#ff6130] font-bold p-2 md:text-xl">
+          Plan your practice now
+        </p>
         <h1 className="md:text-7xl sm:text-6xl text-4xl font-bold md:py-6">
           Grow with music.
         </h1>
@@ -68,6 +71,10 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+      <div>
+        <BarChart />
+      </div>
+
       <div className="w-full py-16 px-4 bg-slate-200">
         <div className="max-w-[1240px] mx-auto grid lg:grid-cols-3">
           <div className="lg:col-span-2 my-4">
@@ -127,7 +134,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-
       {isVisible && (
         <button
           className="fixed bottom-4 right-4 p-2 rounded-full bg-primary text-white transition duration-300 hover:bg-[#c73b10] focus:outline-none"
