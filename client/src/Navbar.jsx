@@ -1,3 +1,4 @@
+import React from "react";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
@@ -6,6 +7,7 @@ import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 export default function Navbar() {
   const { user } = useContext(UserContext);
   const [nav, setNav] = useState(false);
+
   const handleNav = () => {
     setNav(!nav);
   };
@@ -16,8 +18,6 @@ export default function Navbar() {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-
 
   return (
     <header className="flex items-center justify-between">
@@ -137,6 +137,7 @@ export default function Navbar() {
               to={"/"}
               className="p-4 text-gray-900 transition duration-300  hover:text-primary"
               aria-current="page"
+              onClick={handleNav}
             >
               Home
             </Link>
@@ -145,6 +146,7 @@ export default function Navbar() {
             <Link
               to={"/"}
               className="p-4 text-gray-900 transition duration-300  hover:text-primary"
+              onClick={handleNav}
             >
               About
             </Link>
@@ -153,6 +155,7 @@ export default function Navbar() {
             <Link
               to={"/"}
               className="p-4 text-gray-900 transition duration-300  hover:text-primary"
+              onClick={handleNav}
             >
               Room Models
             </Link>
@@ -161,6 +164,7 @@ export default function Navbar() {
             <Link
               to={"/"}
               className="p-4 text-gray-900 transition duration-300  hover:text-primary"
+              onClick={handleNav}
             >
               Our Team
             </Link>
@@ -169,6 +173,7 @@ export default function Navbar() {
             <Link
               to={"/"}
               className="p-4 text-gray-900 transition duration-300  hover:text-primary"
+              onClick={handleNav}
             >
               Contact
             </Link>

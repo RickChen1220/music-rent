@@ -5,6 +5,7 @@ const PlaceSchema = new Schema({
   owner: { type: Schema.Types.ObjectId, ref: "User" },
   title: String,
   address: String,
+  city: String,
   photos: [String],
   description: String,
   facilities: [String],

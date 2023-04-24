@@ -44,6 +44,7 @@ export default function PlacesPage() {
               <Link
                 to={"/account/places/" + place._id}
                 className="cursor-pointer gap-4 flex p-4 border m-4 bg-slate-200 rounded-2xl"
+                key={place._id}
               >
                 {/*photo shoud not shrink  */}
                 <div className="flex w-32 h-32 bg-slate-100 shrink-0">
@@ -53,6 +54,7 @@ export default function PlacesPage() {
                 <div className="grow-0 shrink">
                   <h2 className="text-xl font-bold">{place.title}</h2>
                   <p className="text-sm mt-2">{place.description}</p>
+                  <h3 className="text-sm mt-6">{place.city}</h3>
                 </div>
               </Link>
             );

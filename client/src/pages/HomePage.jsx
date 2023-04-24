@@ -24,7 +24,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-custom-color">
-      <div className="max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center p-6">
+      <div className="max-w-[800px] mt-[-96px] w-full h-[80vh] mx-auto text-center flex flex-col justify-center p-6">
         <p className="text-[#ff6130] font-bold p-2 md:text-xl">
           Plan your practice now
         </p>
@@ -72,6 +72,9 @@ export default function HomePage() {
         </div>
       </div>
       <div>
+        <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold py-2">
+          Rooms in each city
+        </h1>
         <BarChart />
       </div>
 

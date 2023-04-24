@@ -4,11 +4,14 @@ import Facilities from "../Facilities";
 import AccountNav from "../AccountNav";
 import axios from "axios";
 import { Navigate, useParams } from "react-router-dom";
+import { Container } from "@mui/material";
+import Box from "@mui/material/Box";
 
 export default function PlacesFormPage() {
   const { id } = useParams();
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);
   const [description, setDescription] = useState("");
   const [facilities, setFacilities] = useState([]);
@@ -26,6 +29,7 @@ export default function PlacesFormPage() {
       const { data } = response;
       setTitle(data.title);
       setAddress(data.address);
+      setCity(data.city);
       setAddedPhotos(data.photos);
       setDescription(data.description);
       setFacilities(data.facilities);
@@ -46,6 +50,7 @@ export default function PlacesFormPage() {
     const placeData = {
       title,
       address,
+      city,
       addedPhotos,
       description,
       facilities,
@@ -74,7 +79,7 @@ export default function PlacesFormPage() {
   }
 
   return (
-    <div>
+    <Container maxWidth=" lg">
       <AccountNav />
       <form onSubmit={savePlace}>
         {inputHeader("Title")}
@@ -90,6 +95,13 @@ export default function PlacesFormPage() {
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           placeholder="address"
+        ></input>
+        {inputHeader("City")}
+        <input
+          type="text"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          placeholder="city"
         ></input>
         {inputHeader("Photos")}
         <PhotosUploader addedPhotos={addedPhotos} onChange={setAddedPhotos} />
@@ -154,6 +166,6 @@ export default function PlacesFormPage() {
         </div>
         <button className="primary my-4">Save</button>
       </form>
-    </div>
+    </Container>
   );
 }

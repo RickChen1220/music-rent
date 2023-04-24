@@ -19,13 +19,22 @@ export default function BarChart() {
     });
   }, []);
 
+  const placesByCity = chart.reduce((acc, place) => {
+    const city = place.city;
+    if (!acc[city]) {
+      acc[city] = 0;
+    }
+    acc[city] += 1;
+    return acc;
+  }, {});
+
   const data = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    labels: Object.keys(placesByCity),
     datasets: [
       {
-        label: "# of Votes",
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1,
+        label: "# of Places",
+        data: Object.values(placesByCity),
+        borderWidth: 2,
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -44,6 +53,10 @@ export default function BarChart() {
     maintainAspectRatio: false,
     scales: {
       y: {
+        type: "linear",
+        ticks: {
+          precision: 0,
+        },
         beginAtZero: true,
       },
     },

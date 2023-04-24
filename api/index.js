@@ -44,7 +44,6 @@ function getUserDataFromRequest(req) {
   });
 }
 
-
 app.get("/test", (req, res) => {
   res.json("test success");
 });
@@ -142,7 +141,8 @@ app.post("/places", (req, res) => {
   const {
     title,
     address,
-    photos: addedPhotos,
+    city,
+    addedPhotos,
     description,
     facilities,
     openTime,
@@ -157,6 +157,7 @@ app.post("/places", (req, res) => {
       owner: userData.id,
       title,
       address,
+      city,
       photos: addedPhotos,
       description,
       facilities,
@@ -189,6 +190,7 @@ app.put("/places", async (req, res) => {
     id,
     title,
     address,
+    city,
     addedPhotos,
     description,
     facilities,
@@ -206,6 +208,7 @@ app.put("/places", async (req, res) => {
       placeDoc.set({
         title,
         address,
+        city,
         photos: addedPhotos,
         description,
         facilities,
@@ -225,7 +228,7 @@ app.get("/places", async (req, res) => {
   res.json(await Place.find());
 });
 
-app.post("/bookings", async(req, res) => {
+app.post("/bookings", async (req, res) => {
   const userData = await getUserDataFromRequest(req);
   const { place, checkIn, checkOut, numberOfGuests, name, phone, price } =
     req.body;
@@ -237,7 +240,7 @@ app.post("/bookings", async(req, res) => {
     name,
     phone,
     price,
-    user:userData.id
+    user: userData.id,
   })
     .then((doc) => {
       res.json(doc);
@@ -247,10 +250,8 @@ app.post("/bookings", async(req, res) => {
     });
 });
 
-
-
-app.get("/bookings", async(req, res) => {
- const userData = await getUserDataFromRequest(req);
- res.json(await Booking.find({user:userData.id}).populate("place"))
+app.get("/bookings", async (req, res) => {
+  const userData = await getUserDataFromRequest(req);
+  res.json(await Booking.find({ user: userData.id }).populate("place"));
 });
 app.listen(4000);
