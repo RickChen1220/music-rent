@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import BookingWidget from "../BookingWidget";
 import PlaceGallery from "../PlaceGallery";
 import AddressLink from "../AddressLink";
+import Calendar from "../Calendar";
 
 export default function PlacePage() {
   const { id } = useParams();
@@ -39,6 +40,9 @@ export default function PlacePage() {
           Close time: {place.closeTime}
           <br />
           Max number of guests: {place.maxGuests}
+          </div>
+          <div>
+            <Calendar />
           </div>
         </div>
         <div>
