@@ -3,6 +3,7 @@ import { differenceInCalendarDays } from "date-fns";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "./UserContext";
+import Calendar from "./Calendar";
 
 export default function BookingWidget({ place }) {
   const [checkIn, setCheckIn] = useState("");
@@ -11,13 +12,13 @@ export default function BookingWidget({ place }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [redirect, setRedirect] = useState("");
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
-  useEffect(()=>{
-    if(user) {
+  useEffect(() => {
+    if (user) {
       setName(user.name);
     }
-  },[user])
+  }, [user]);
 
   let numberOfDays = 0;
   if (checkIn && checkOut) {
@@ -28,7 +29,7 @@ export default function BookingWidget({ place }) {
   }
 
   async function bookThisPlace() {
-    const response =  await axios.post("/bookings", {
+    const response = await axios.post("/bookings", {
       checkIn,
       checkOut,
       numberOfGuests,
@@ -40,8 +41,8 @@ export default function BookingWidget({ place }) {
     const bookingId = response.data._id;
     setRedirect(`/account/bookings/${bookingId}`);
   }
-  if(redirect){
-    return <Navigate to={redirect} />
+  if (redirect) {
+    return <Navigate to={redirect} />;
   }
 
   return (
@@ -51,6 +52,9 @@ export default function BookingWidget({ place }) {
           Price: ${place.price} / per night
         </div>
         <div className="border border-gray-400 rounded-2xl">
+          <div>
+            <Calendar />
+          </div>
           <div className="flex">
             <div className=" py-3 px-4">
               <label>From:</label>

@@ -5,6 +5,7 @@ import BookingWidget from "../BookingWidget";
 import PlaceGallery from "../PlaceGallery";
 import AddressLink from "../AddressLink";
 import Calendar from "../Calendar";
+import TimePicker from "../TimePicker";
 
 export default function PlacePage() {
   const { id } = useParams();
@@ -30,19 +31,20 @@ export default function PlacePage() {
         <div>
           <div className="my-2">
             <h2 className="font-semibold text-2xl">Description</h2>
-            <div className="my-6">
-              {place.description}
-            </div>
+            <div className="my-6">{place.description}</div>
           </div>
           <div className="">
-          Open time: {place.openTime}
-          <br />
-          Close time: {place.closeTime}
-          <br />
-          Max number of guests: {place.maxGuests}
+            Open time: {place.openTime}
+            <br />
+            Close time: {place.closeTime}
+            <br />
+            Max number of guests: {place.maxGuests}
           </div>
           <div>
             <Calendar />
+          </div>
+          <div>
+            <TimePicker />
           </div>
         </div>
         <div>
