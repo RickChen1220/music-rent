@@ -2,9 +2,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-export default function TimePicker() {
+export default function TimePicker({ onTimeSelect }) {
   const { id } = useParams();
   const [place, setPlace] = useState("");
+
+  function handleTimeChange(selectedTime) {
+    onTimeSelect(selectedTime);
+  }
+
+  function handleTimeSlotClick(selectedTime) {
+    console.log(`Selected time: ${selectedTime}`);
+  }
 
   useEffect(() => {
     if (!id) {
@@ -22,7 +30,7 @@ export default function TimePicker() {
   let startTime = new Date();
   startTime.setHours(place.openTime);
   startTime.setMinutes(0);
-  const endTime = new Date();
+  let endTime = new Date();
   endTime.setHours(place.closeTime);
   endTime.setMinutes(0 - 30);
   while (startTime < endTime) {
@@ -31,7 +39,7 @@ export default function TimePicker() {
   }
 
   // Create a label for the time range
-  const label = `From ${place.openTime} to ${place.closeTime}`;
+  const label = `Opening time: from ${place.openTime} to ${place.closeTime}`;
 
   return (
     <div>
@@ -48,6 +56,14 @@ export default function TimePicker() {
               key={timeSlot.toISOString()}
               data-cy={`book-now-time-slot-box-${timeSlot.getHours()}-${timeSlot.getMinutes()}`}
               className="m-2 p-2 rounded-2xl"
+              onClick={() =>
+                handleTimeChange(
+                  timeSlot.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                )
+              }
             >
               <span hidden className="text-xs text-center leading-none">
                 {timeSlot.toLocaleDateString()}

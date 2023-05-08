@@ -10,6 +10,12 @@ import TimePicker from "../TimePicker";
 export default function PlacePage() {
   const { id } = useParams();
   const [place, setPlace] = useState(null);
+  const [date, setDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  function handleSelectTime(time) {
+    setSelectedTime(time);
+  }
 
   useEffect(() => {
     if (!id) {
@@ -41,14 +47,14 @@ export default function PlacePage() {
             Max number of guests: {place.maxGuests}
           </div>
           <div>
-            <Calendar />
+            <Calendar setDate={setDate} />
           </div>
           <div>
-            <TimePicker />
+            <TimePicker onTimeSelect={handleSelectTime} />
           </div>
         </div>
         <div>
-          <BookingWidget place={place} />
+          <BookingWidget place={place} selectedTime={selectedTime} />
         </div>
       </div>
       <div className="bg-slate-100 -mx-8 px-8 py-8 border-t">
