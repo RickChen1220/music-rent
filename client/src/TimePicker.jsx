@@ -5,14 +5,20 @@ import { useParams } from "react-router-dom";
 export default function TimePicker({ onTimeSelect }) {
   const { id } = useParams();
   const [place, setPlace] = useState("");
+  const [clickedSlots, setClickedSlots] = useState({});
 
   function handleTimeChange(selectedTime) {
+    const isSelected = clickedSlots[selectedTime];
+    const updatedClickedSlots = {
+      [selectedTime]: !isSelected,
+    };
     onTimeSelect(selectedTime);
+    setClickedSlots(updatedClickedSlots);
   }
 
-  function handleTimeSlotClick(selectedTime) {
-    console.log(`Selected time: ${selectedTime}`);
-  }
+  //function handleTimeSlotClick(selectedTime) {
+  //  console.log(`Selected time: ${selectedTime}`);
+  // }
 
   useEffect(() => {
     if (!id) {
@@ -55,7 +61,16 @@ export default function TimePicker({ onTimeSelect }) {
             <button
               key={timeSlot.toISOString()}
               data-cy={`book-now-time-slot-box-${timeSlot.getHours()}-${timeSlot.getMinutes()}`}
-              className="m-2 p-2 rounded-2xl"
+              className={`m-2 p-2 rounded-2xl ${
+                clickedSlots[
+                  timeSlot.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                ]
+                  ? "bg-primary text-white"
+                  : ""
+              }`}
               onClick={() =>
                 handleTimeChange(
                   timeSlot.toLocaleTimeString([], {

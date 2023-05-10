@@ -28,6 +28,10 @@ export default function PlacePage() {
 
   if (!place) return "";
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const isTodayOrFutureDate = date >= today;
+
   return (
     <div className="mt-4 bg-slate-100 mx-0 px-8 pt-8 ">
       <h1 className="text-3xl">{place.title}</h1>
@@ -49,9 +53,12 @@ export default function PlacePage() {
           <div>
             <Calendar setDate={setDate} />
           </div>
-          <div>
-            <TimePicker onTimeSelect={handleSelectTime} />
-          </div>
+          {/* Render TimePicker only if selected date is not in the past */}
+          {isTodayOrFutureDate && (
+            <div>
+              <TimePicker onTimeSelect={handleSelectTime} />
+            </div>
+          )}
         </div>
         <div>
           <BookingWidget place={place} selectedTime={selectedTime} />
