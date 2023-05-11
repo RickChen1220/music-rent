@@ -32,6 +32,9 @@ export default function PlacePage() {
   today.setHours(0, 0, 0, 0);
   const isTodayOrFutureDate = date >= today;
 
+  // Create a new Date object using the selected date state
+  const selectedDateObj = new Date(date);
+
   return (
     <div className="mt-4 bg-slate-100 mx-0 px-8 pt-8 ">
       <h1 className="text-3xl">{place.title}</h1>
@@ -54,10 +57,17 @@ export default function PlacePage() {
             <Calendar setDate={setDate} />
           </div>
           {/* Render TimePicker only if selected date is not in the past */}
-          {isTodayOrFutureDate && (
+          {isTodayOrFutureDate ? (
             <div>
-              <TimePicker onTimeSelect={handleSelectTime} />
+              <TimePicker
+                onTimeSelect={handleSelectTime}
+                selectedDate={selectedDateObj}
+              />
             </div>
+          ) : (
+            <p className="font-semibold text-2xl mt-10">
+              Please select a date in the future
+            </p>
           )}
         </div>
         <div>
