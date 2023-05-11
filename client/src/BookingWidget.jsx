@@ -5,7 +5,7 @@ import axios from "axios";
 import { UserContext } from "./UserContext";
 import Calendar from "./Calendar";
 
-export default function BookingWidget({ place, selectedTime }) {
+export default function BookingWidget({ place, selectedTime, selectedDate }) {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
@@ -53,7 +53,11 @@ export default function BookingWidget({ place, selectedTime }) {
         </div>
         <div className="border border-gray-400 rounded-2xl">
           <div>
-            <Calendar />
+          {selectedDate && (
+          <div className=" py-3 px-4">
+            <p>Selected Date: {selectedDate}</p>
+          </div>
+        )}
           </div>
           <div className="flex">
             <div className=" py-3 px-4">
@@ -99,7 +103,7 @@ export default function BookingWidget({ place, selectedTime }) {
           )}
         </div>
         {selectedTime && (
-          <div className=" py-3 px-4 border-t border-gray-400">
+          <div className=" py-3 px-4">
             <p>Selected Time: {selectedTime}</p>
           </div>
         )}

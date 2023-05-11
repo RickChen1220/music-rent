@@ -71,7 +71,7 @@ export default function PlacePage() {
           )}
         </div>
         <div>
-          <BookingWidget place={place} selectedTime={selectedTime} />
+          <BookingWidget place={place} selectedTime={selectedTime} selectedDate={selectedDateObj.toLocaleDateString()}/>
         </div>
       </div>
       <div className="bg-slate-100 -mx-8 px-8 py-8 border-t">

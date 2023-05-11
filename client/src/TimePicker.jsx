@@ -43,6 +43,8 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
   let endTime = new Date(selectedDate);
   endTime.setHours(place.closeTime);
   endTime.setMinutes(0);
+  // Subtract one hour from closing time to allow for the last booking to end at the closing time
+  endTime.setMinutes(endTime.getMinutes() - 30);
 
   if (isToday) {
     // If the selected date is today, set the start time to the current time or the opening time of the place
