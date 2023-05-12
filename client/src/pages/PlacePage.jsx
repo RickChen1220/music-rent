@@ -12,9 +12,18 @@ export default function PlacePage() {
   const [place, setPlace] = useState(null);
   const [date, setDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
+  const [showCalendar, setShowCalendar] = useState(true);
 
   function handleSelectTime(time) {
     setSelectedTime(time);
+  }
+
+  function handlePhotoClick() {
+    setShowCalendar(false);
+  }
+
+  function handlePhotoClose() {
+    setShowCalendar(true);
   }
 
   useEffect(() => {
@@ -39,7 +48,11 @@ export default function PlacePage() {
     <div className="mt-4 bg-slate-100 mx-0 px-8 pt-8 ">
       <h1 className="text-3xl">{place.title}</h1>
       <AddressLink>{place.address}</AddressLink>
-      <PlaceGallery place={place} />
+      <PlaceGallery
+        place={place}
+        onPhotoClick={handlePhotoClick}
+        onCloseClick={handlePhotoClose}
+      />
       <div className="mt-8 mb-8 gap-8 grid grid-cols-1 md:grid-cols-[2fr_1fr]">
         <div>
           <div className="my-2">
@@ -53,9 +66,11 @@ export default function PlacePage() {
             <br />
             Max number of guests: {place.maxGuests}
           </div>
-          <div>
-            <Calendar setDate={setDate} />
-          </div>
+          {showCalendar && (
+            <div>
+              <Calendar setDate={setDate} />
+            </div>
+          )}
           {/* Render TimePicker only if selected date is not in the past */}
           {isTodayOrFutureDate ? (
             <div>
@@ -71,7 +86,11 @@ export default function PlacePage() {
           )}
         </div>
         <div>
-          <BookingWidget place={place} selectedTime={selectedTime} selectedDate={selectedDateObj.toLocaleDateString()}/>
+          <BookingWidget
+            place={place}
+            selectedTime={selectedTime}
+            selectedDate={selectedDateObj.toLocaleDateString()}
+          />
         </div>
       </div>
       <div className="bg-slate-100 -mx-8 px-8 py-8 border-t">

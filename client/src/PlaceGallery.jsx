@@ -1,7 +1,18 @@
 import { useState } from "react";
 
-export default function PlaceGallery({ place }) {
+export default function PlaceGallery({ place, onPhotoClick, onCloseClick }) {
   const [showAllPhotos, setShowAllPhotos] = useState(false);
+
+  function handlePhotoClick(photo) {
+    setShowAllPhotos(true);
+    onPhotoClick(photo);
+  }
+
+  function handlePhotoClose() {
+    setShowAllPhotos(false);
+    onCloseClick();
+  }
+
   if (showAllPhotos) {
     return (
       <div className="absolute inset-0 bg-coustom-color text-primary min-h-screen">
@@ -9,7 +20,7 @@ export default function PlaceGallery({ place }) {
           <div>
             <h2 className="text-3xl mr-48">Photos of {place.title}</h2>
             <button
-              onClick={() => setShowAllPhotos(false)}
+              onClick={handlePhotoClose}
               className=" fixed right-12 top-8  flex gap-1 py-2 px-4 rounded-2xl shadow shadow-slate-800 bg-white text-black"
             >
               <svg
@@ -49,7 +60,7 @@ export default function PlaceGallery({ place }) {
           {place.photos?.[0] && (
             <div>
               <img
-                onClick={() => setShowAllPhotos(true)}
+                onClick={handlePhotoClick}
                 className="aspect-square object-cover cursor-pointer  w-full h-full"
                 src={"http://localhost:4000/uploads/" + place.photos[0]}
               />
@@ -59,7 +70,7 @@ export default function PlaceGallery({ place }) {
         <div className="grid">
           {place.photos?.[1] && (
             <img
-              onClick={() => setShowAllPhotos(true)}
+              onClick={handlePhotoClick}
               className="aspect-square object-cover cursor-pointer"
               src={"http://localhost:4000/uploads/" + place.photos[1]}
             />
@@ -67,7 +78,7 @@ export default function PlaceGallery({ place }) {
           <div className="overflow-hidden">
             {place.photos?.[2] && (
               <img
-                onClick={() => setShowAllPhotos(true)}
+                onClick={handlePhotoClick}
                 className="aspect-square object-cover cursor-pointer relative top-2"
                 src={"http://localhost:4000/uploads/" + place.photos[2]}
               />
@@ -76,7 +87,7 @@ export default function PlaceGallery({ place }) {
         </div>
       </div>
       <button
-        onClick={() => setShowAllPhotos(true)}
+        onClick={handlePhotoClick}
         className="flex gap-1 absolute bottom-2 right-2 py-2 px-4 bg-slate-50 rounded-2xl shadow-md shadow-slate-500"
       >
         <svg

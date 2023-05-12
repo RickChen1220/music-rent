@@ -3,7 +3,6 @@ import { differenceInCalendarDays } from "date-fns";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "./UserContext";
-import Calendar from "./Calendar";
 
 export default function BookingWidget({ place, selectedTime, selectedDate }) {
   const [checkIn, setCheckIn] = useState("");
@@ -49,33 +48,21 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
     <div>
       <div className="bg-white shadow p-4 rounded-2xl">
         <div className="text-2xl text-center">
-          Price: ${place.price} / per night
+          Price: ${place.price} / per hour
         </div>
         <div className="border border-gray-400 rounded-2xl">
           <div>
-          {selectedDate && (
-          <div className=" py-3 px-4">
-            <p>Selected Date: {selectedDate}</p>
+            {selectedDate && (
+              <div className=" py-3 px-4">
+                <p>Selected Date: {selectedDate}</p>
+              </div>
+            )}
           </div>
-        )}
-          </div>
-          <div className="flex">
-            <div className=" py-3 px-4">
-              <label>From:</label>
-              <input
-                type="date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-              />
-            </div>
-            <div className=" py-3 px-4 border-l border-gray-400">
-              <label>To:</label>
-              <input
-                type="date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-              />
-            </div>
+          <div className="py-3 px-4 border-t border-gray-400">
+            <p>
+              Your are booking this room from {selectedTime} to{" "}
+              {selectedTime + 1}
+            </p>
           </div>
           <div className=" py-3 px-4 border-t border-gray-400">
             <label>Number of guests:</label>
