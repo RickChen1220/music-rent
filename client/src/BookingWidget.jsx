@@ -1,12 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { differenceInCalendarDays } from "date-fns";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "./UserContext";
 
 export default function BookingWidget({ place, selectedTime, selectedDate }) {
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -19,23 +16,27 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
     }
   }, [user]);
 
-  let numberOfDays = 0;
-  if (checkIn && checkOut) {
-    numberOfDays = differenceInCalendarDays(
-      new Date(checkOut),
-      new Date(checkIn)
-    );
-  }
+  const selectedDateObj = new Date(selectedDate);
+  const selectedTimeObj = new Date();
+  const [hours, minutes] = selectedTime.split(":");
+  selectedTimeObj.setHours(parseInt(hours, 10), parseInt(minutes, 10));
+  const checkOutTimeObj = new Date(selectedTimeObj.getTime() + 60 * 60 * 1000);
+  const checkOutTime = checkOutTimeObj.toLocaleTimeString([], {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   async function bookThisPlace() {
     const response = await axios.post("/bookings", {
-      checkIn,
-      checkOut,
+      date: selectedDateObj,
+      checkIn: selectedTimeObj,
+      checkOut: checkOutTimeObj,
       numberOfGuests,
       name,
       phone,
       place: place._id,
-      price: numberOfDays * place.price,
+      price: place.price,
     });
     const bookingId = response.data._id;
     setRedirect(`/account/bookings/${bookingId}`);
@@ -43,6 +44,11 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
   if (redirect) {
     return <Navigate to={redirect} />;
   }
+
+ 
+  console.log(selectedDateObj);
+  console.log(checkOutTimeObj);
+  console.log(selectedTimeObj);
 
   return (
     <div>
@@ -59,10 +65,13 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
             )}
           </div>
           <div className="py-3 px-4 border-t border-gray-400">
-            <p>
-              Your are booking this room from {selectedTime} to{" "}
-              {selectedTime + 1}
-            </p>
+            {selectedTime ? (
+              <p>
+                Your are booking this room from {selectedTime} to {checkOutTime}
+              </p>
+            ) : (
+              <p>Please select a time</p>
+            )}
           </div>
           <div className=" py-3 px-4 border-t border-gray-400">
             <label>Number of guests:</label>
@@ -72,7 +81,7 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
               onChange={(e) => setNumberOfGuests(e.target.value)}
             />
           </div>
-          {numberOfDays > 0 && (
+          {selectedDate && selectedTime && (
             <div className=" py-3 px-4 border-t border-gray-400">
               <label>Name:</label>
               <input
@@ -96,7 +105,6 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
         )}
         <button onClick={bookThisPlace} className="primary mt-4">
           Book this place
-          {numberOfDays > 0 && <span> ${numberOfDays * place.price}</span>}
         </button>
       </div>
     </div>

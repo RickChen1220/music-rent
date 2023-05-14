@@ -22,13 +22,28 @@ export default function BookingPage() {
   if (!booking) {
     return "";
   }
+
+  const checkInTime = new Date(booking.checkIn);
+  const checkOutTime = new Date(booking.checkOut);
+  const checkIn = checkInTime.toLocaleTimeString([], {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const checkOut = checkOutTime.toLocaleTimeString([], {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
     <div className="my-8">
       <h1 className="text-3xl">{booking.place.title}</h1>
       <AddressLink>{booking.place.address}</AddressLink>
       <div className="bg-gray-200 p-6 my-6 rounded-2xl items-center flex justify-between">
         <div>
-          <h2 className="text-2xl mb-4">Your booking information:</h2>
+          <h2 className="text-2xl mb-4">Your booking information:
+          {checkIn} to {checkOut}</h2>
           <BookingDates booking={booking} />
         </div>
         <div className="bg-primary p-6 text-white rounded-2xl">

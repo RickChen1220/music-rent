@@ -230,10 +230,11 @@ app.get("/places", async (req, res) => {
 
 app.post("/bookings", async (req, res) => {
   const userData = await getUserDataFromRequest(req);
-  const { place, checkIn, checkOut, numberOfGuests, name, phone, price } =
+  const { place, date, checkIn, checkOut, numberOfGuests, name, phone, price } =
     req.body;
   Booking.create({
     place,
+    date,
     checkIn,
     checkOut,
     numberOfGuests,

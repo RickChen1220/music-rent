@@ -11,7 +11,7 @@ export default function PlacePage() {
   const { id } = useParams();
   const [place, setPlace] = useState(null);
   const [date, setDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedTime, setSelectedTime] = useState("");
   const [showCalendar, setShowCalendar] = useState(true);
 
   function handleSelectTime(time) {
@@ -81,7 +81,7 @@ export default function PlacePage() {
             </div>
           ) : (
             <p className="font-semibold text-2xl mt-10">
-              Please select a date in the future
+              You cannot book a place in the past.
             </p>
           )}
         </div>
