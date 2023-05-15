@@ -21,7 +21,7 @@ export default function BookingsPage() {
           bookings.map((booking) => (
             <Link
               to={`/account/bookings/${booking._id}`}
-              className="flex gap-4 bg-slate-200 rounded-2xl overflow-hidden"
+              className="flex gap-4 bg-slate-200 rounded-2xl overflow-hidden border border-gray-300 my-4"
             >
               <div className="w-48">
                 <PlaceImg place={booking.place} />
@@ -33,11 +33,7 @@ export default function BookingsPage() {
                   className="border-t border-gray-300 mt-4 py-2 text-gray-500"
                 />
                 <div className="text-xl font-semibold">
-                  {differenceInCalendarDays(
-                    new Date(booking.checkOut),
-                    new Date(booking.checkIn)
-                  ) + 1}
-                  days | Total price: ${booking.price}
+                  Total price: ${booking.price}
                 </div>
               </div>
             </Link>

@@ -42,9 +42,12 @@ export default function BookingPage() {
       <AddressLink>{booking.place.address}</AddressLink>
       <div className="bg-gray-200 p-6 my-6 rounded-2xl items-center flex justify-between">
         <div>
-          <h2 className="text-2xl mb-4">Your booking information:
-          {checkIn} to {checkOut}</h2>
-          <BookingDates booking={booking} />
+          <h2 className="text-2xl mb-4">Your booking information:</h2>
+          <div className="mb-4 flex text-lg">
+          <BookingDates booking={booking} checkIn={checkIn} checkOut={checkOut} />
+          &nbsp;
+          <span className="font-bold">{checkIn} to {checkOut}</span>
+          </div>
         </div>
         <div className="bg-primary p-6 text-white rounded-2xl">
           <div>Total price</div>
