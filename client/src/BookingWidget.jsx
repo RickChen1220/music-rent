@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "./UserContext";
+import { DateTime } from "luxon";
 
 export default function BookingWidget({ place, selectedTime, selectedDate }) {
   const [numberOfGuests, setNumberOfGuests] = useState(1);
@@ -16,20 +17,13 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
     }
   }, [user]);
 
-  const selectedDateObj = new Date(selectedDate);
-  const selectedTimeObj = new Date();
-  const [hours, minutes] = selectedTime.split(":");
-  selectedTimeObj.setHours(parseInt(hours, 10), parseInt(minutes, 10));
-  const checkOutTimeObj = new Date(selectedTimeObj.getTime() + 60 * 60 * 1000);
-  const checkOutTime = checkOutTimeObj.toLocaleTimeString([], {
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const selectedTimeObj = DateTime.fromFormat(selectedTime, "hh:mm");
+  const checkOutTimeObj = selectedTimeObj.plus({ hours: 1 });
+  const checkOutTime = checkOutTimeObj.toFormat("HH:mm");
 
   async function bookThisPlace() {
     const response = await axios.post("/bookings", {
-      date: selectedDateObj,
+      date: selectedDate,
       checkIn: selectedTimeObj,
       checkOut: checkOutTimeObj,
       numberOfGuests,
@@ -41,14 +35,14 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
     const bookingId = response.data._id;
     setRedirect(`/account/bookings/${bookingId}`);
   }
+
   if (redirect) {
     return <Navigate to={redirect} />;
   }
 
- 
-  console.log(selectedDateObj);
-  console.log(checkOutTimeObj);
-  console.log(selectedTimeObj);
+  console.log("selectedDate :", selectedDate);
+  console.log("checkOutTimeObj :", checkOutTimeObj);
+  console.log("selectedTimeObj :", selectedTimeObj);
 
   return (
     <div>

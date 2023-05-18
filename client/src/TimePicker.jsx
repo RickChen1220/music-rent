@@ -15,6 +15,7 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
     };
     onTimeSelect(selectedTime);
     setClickedSlots(updatedClickedSlots);
+    console.log("selectedTime:", selectedTime);
   }
 
   //function handleTimeSlotClick(selectedTime) {
@@ -51,7 +52,6 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
   // Subtract one hour from closing time to allow for the last booking to end at the closing time
   endTime = endTime.minus({ minutes: 30 });
 
-
   if (isToday) {
     // If the selected date is today, set the start time to the current time or the opening time of the place
     const currentHour = now.hour;
@@ -63,10 +63,9 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
     } else {
       if (currentMinute < 30) {
         // Round up to the nearest 30-minute interval
-        startTime = startTime.plus({ minutes: 30 - currentMinute });
+        startTime = startTime.set({ hour: currentHour, minute: 30 });
       } else {
-        startTime = startTime.set({ hour: currentHour, minute: 0 });
-        startTime = startTime.plus({ minutes: 30 });
+        startTime = startTime.set({ hour: currentHour + 1, minute: 0 });
       }
     }
     // If the current time is after the closing time of the place, don't show any time slots
@@ -99,41 +98,30 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
           className="flex flex-wrap justify-center"
         >
           {timeSlots.map((timeSlot) => {
+            const timeSlotObj = DateTime.fromJSDate(timeSlot);
+
+            const timeSlotBoxClasses = `m-2 p-2 rounded-2xl ${
+              clickedSlots[timeSlotObj.toFormat("HH:mm")]
+                ? "bg-primary text-white"
+                : ""
+            }`;
+
+            const timeSlotLabel = timeSlotObj.toFormat("EEEE, LLLL d");
+
+            const timeSlotTime = timeSlotObj.toFormat("HH:mm");
+
             return (
               <button
-                key={timeSlot.toISOString()}
-                data-cy={`book-now-time-slot-box-${timeSlot.getHours()}-${timeSlot.getMinutes()}`}
-                className={`m-2 p-2 rounded-2xl ${
-                  clickedSlots[
-                    timeSlot.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  ]
-                    ? "bg-primary text-white"
-                    : ""
-                }`}
-                onClick={() =>
-                  handleTimeChange(
-                    DateTime.fromJSDate(timeSlot).toLocaleString({
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  )
-                }
+                key={timeSlotObj.toISO()}
+                data-cy={`book-now-time-slot-box-${timeSlotObj.hour}-${timeSlotObj.minute}`}
+                className={timeSlotBoxClasses}
+                onClick={() => handleTimeChange(timeSlotTime)}
               >
                 <span hidden className="text-xs text-center leading-none">
-                  {DateTime.fromJSDate(timeSlot).toLocaleString({
-                    weekday: "short",
-                    month: "short",
-                    day: "numeric",
-                  })}
+                  {timeSlotLabel}
                 </span>
                 <span className="text-md text-center leading-none">
-                  {DateTime.fromJSDate(timeSlot).toLocaleString({
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {timeSlotTime}
                 </span>
               </button>
             );
