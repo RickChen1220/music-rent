@@ -9,6 +9,7 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [redirect, setRedirect] = useState("");
+  const [checkOutTime, setCheckOutTime] = useState("");
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -19,7 +20,10 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
 
   const selectedTimeObj = DateTime.fromFormat(selectedTime, "hh:mm");
   const checkOutTimeObj = selectedTimeObj.plus({ hours: 1 });
-  const checkOutTime = checkOutTimeObj.toFormat("HH:mm");
+  const formattedCheckOutTime = checkOutTimeObj.toFormat("HH:mm");
+  useEffect(() => {
+    setCheckOutTime(formattedCheckOutTime);
+  }, [selectedTime]);
 
   async function bookThisPlace() {
     const response = await axios.post("/bookings", {
