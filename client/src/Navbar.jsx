@@ -42,8 +42,8 @@ export default function Navbar() {
           </Link>
         </div>
       </nav>
-      <div className="hidden md:flex" id="navbar-default">
-        <ul className="font-semibold flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg  md:flex-row md:space-x-20 md:mt-0 md:border-0 ">
+      <div className="hidden lg:flex" id="navbar-default">
+        <ul className="font-semibold flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg  md:flex-row md:space-x-10 md:mt-0 md:border-0 ">
           <li className="p-4">
             <Link
               to={"/"}
@@ -121,7 +121,7 @@ export default function Navbar() {
         </ul>
       </div>
 
-      <div onClick={handleNav} className="block md:hidden">
+      <div onClick={handleNav} className="block lg:hidden">
         {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
       </div>
       <div
