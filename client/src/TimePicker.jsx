@@ -7,20 +7,8 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
   const { id } = useParams();
   const [place, setPlace] = useState("");
   const [clickedSlots, setClickedSlots] = useState({});
-
-  function handleTimeChange(selectedTime) {
-    const isSelected = clickedSlots[selectedTime];
-    const updatedClickedSlots = {
-      [selectedTime]: !isSelected,
-    };
-    onTimeSelect(selectedTime);
-    setClickedSlots(updatedClickedSlots);
-    console.log("selectedTime:", selectedTime);
-  }
-
-  //function handleTimeSlotClick(selectedTime) {
-  //  console.log(`Selected time: ${selectedTime}`);
-  // }
+  const [selectedTime, setSelectedTime] = useState("");
+  const [cannotPick, setCannotPick] = useState("");
 
   useEffect(() => {
     if (!id) {
@@ -30,6 +18,15 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
       setPlace(res.data);
     });
   }, [id]);
+
+  useEffect(() => {
+    if (selectedTime) {
+      const selectedTimeObj = DateTime.fromFormat(selectedTime, "HH:mm");
+      const cannotPickObj = selectedTimeObj.plus({ minutes: 30 });
+      const formattedCannotPick = cannotPickObj.toFormat("HH:mm");
+      setCannotPick(formattedCannotPick);
+    }
+  }, [selectedTime]);
 
   if (!place) return "";
 
@@ -81,16 +78,38 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
       startTime = startTime.plus({ minutes: 30 });
       continue;
     }
-    timeSlots.push(timeSlot);
+    const timeSlotObj = DateTime.fromJSDate(timeSlot);
+    const timeSlotLabel = timeSlotObj.toFormat("EEEE, LLLL d");
+    const timeSlotTime = timeSlotObj.toFormat("HH:mm");
+    const isDisabled = timeSlotTime === cannotPick;
+
+    timeSlots.push({
+      timeSlotObj,
+      timeSlotLabel,
+      timeSlotTime,
+      isDisabled,
+    });
+
     startTime = startTime.plus({ minutes: 30 });
   }
   // Create a label for the time range
   const label = `Opening time: from ${place.openTime} to ${place.closeTime}`;
 
+  function handleTimeChange(selectedTime) {
+    const isSelected = clickedSlots[selectedTime];
+    const updatedClickedSlots = {
+      [selectedTime]: !isSelected,
+    };
+    setSelectedTime(isSelected ? "" : selectedTime);
+    onTimeSelect(isSelected ? "" : selectedTime);
+    setClickedSlots(updatedClickedSlots);
+    console.log("selectedTime:", isSelected ? "Now is empty" : selectedTime);
+  }
+
   return (
     <div>
-      <div className="shadow p-2 rounded-2xl">
-        <div id="time-range-label" className="text-center font-medium mb-2">
+      <div className="rounded-2xl p-2 shadow">
+        <div id="time-range-label" className="mb-2 text-center font-medium">
           {label}
         </div>
         <div
@@ -98,17 +117,12 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
           className="flex flex-wrap justify-center"
         >
           {timeSlots.map((timeSlot) => {
-            const timeSlotObj = DateTime.fromJSDate(timeSlot);
+            const { timeSlotObj, timeSlotLabel, timeSlotTime, isDisabled } =
+              timeSlot;
 
             const timeSlotBoxClasses = `m-2 p-2 rounded-2xl ${
-              clickedSlots[timeSlotObj.toFormat("HH:mm")]
-                ? "bg-primary text-white"
-                : ""
+              clickedSlots[timeSlotTime] ? "bg-primary text-white" : ""
             }`;
-
-            const timeSlotLabel = timeSlotObj.toFormat("EEEE, LLLL d");
-
-            const timeSlotTime = timeSlotObj.toFormat("HH:mm");
 
             return (
               <button
@@ -116,8 +130,9 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
                 data-cy={`book-now-time-slot-box-${timeSlotObj.hour}-${timeSlotObj.minute}`}
                 className={timeSlotBoxClasses}
                 onClick={() => handleTimeChange(timeSlotTime)}
+                disabled={isDisabled}
               >
-                <span hidden className="text-xs text-center leading-none">
+                <span hidden className="text-center text-xs leading-none">
                   {timeSlotLabel}
                 </span>
                 <span className="text-md text-center leading-none">

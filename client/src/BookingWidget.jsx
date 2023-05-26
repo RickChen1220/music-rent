@@ -44,17 +44,17 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
     return <Navigate to={redirect} />;
   }
 
-  console.log("selectedDate :", selectedDate);
+  /*   console.log("selectedDate :", selectedDate);
   console.log("checkOutTimeObj :", checkOutTimeObj);
-  console.log("selectedTimeObj :", selectedTimeObj);
+  console.log("selectedTimeObj :", selectedTimeObj); */
 
   return (
     <div>
-      <div className="bg-white shadow p-4 rounded-2xl">
-        <div className="text-2xl text-center">
+      <div className="rounded-2xl bg-white p-4 shadow">
+        <div className="text-center text-2xl">
           Price: ${place.price} / per hour
         </div>
-        <div className="border border-gray-400 rounded-2xl">
+        <div className="rounded-2xl border border-gray-400">
           <div>
             {selectedDate && (
               <div className=" py-3 px-4">
@@ -62,7 +62,7 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
               </div>
             )}
           </div>
-          <div className="py-3 px-4 border-t border-gray-400">
+          <div className="border-t border-gray-400 py-3 px-4">
             {selectedTime ? (
               <p>
                 Your are booking this room from {selectedTime} to {checkOutTime}
@@ -71,7 +71,7 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
               <p>Please select a time</p>
             )}
           </div>
-          <div className=" py-3 px-4 border-t border-gray-400">
+          <div className=" border-t border-gray-400 py-3 px-4">
             <label>Number of guests:</label>
             <input
               type="number"
@@ -80,7 +80,7 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
             />
           </div>
           {selectedDate && selectedTime && (
-            <div className=" py-3 px-4 border-t border-gray-400">
+            <div className=" border-t border-gray-400 py-3 px-4">
               <label>Name:</label>
               <input
                 type="text"
