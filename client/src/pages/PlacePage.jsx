@@ -12,10 +12,15 @@ export default function PlacePage() {
   const [place, setPlace] = useState(null);
   const [date, setDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState("");
+  const [checkoutTime, setCheckoutTime] = useState("");
   const [showCalendar, setShowCalendar] = useState(true);
 
   function handleSelectTime(time) {
     setSelectedTime(time);
+  }
+
+  function handleCheckoutTime(time) {
+    setCheckoutTime(time);
   }
 
   function handlePhotoClick() {
@@ -45,7 +50,7 @@ export default function PlacePage() {
   const selectedDateObj = new Date(date);
 
   return (
-    <div className="mt-4 bg-slate-100 mx-0 px-8 pt-8 ">
+    <div className="mx-0 mt-4 bg-slate-100 px-8 pt-8 ">
       <h1 className="text-3xl">{place.title}</h1>
       <AddressLink>{place.address}</AddressLink>
       <PlaceGallery
@@ -53,10 +58,10 @@ export default function PlacePage() {
         onPhotoClick={handlePhotoClick}
         onCloseClick={handlePhotoClose}
       />
-      <div className="mt-8 mb-8 gap-8 grid grid-cols-1 md:grid-cols-[2fr_1fr]">
+      <div className="mt-8 mb-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
         <div>
           <div className="my-2">
-            <h2 className="font-semibold text-2xl">Description</h2>
+            <h2 className="text-2xl font-semibold">Description</h2>
             <div className="my-6">{place.description}</div>
           </div>
           <div className="">
@@ -77,10 +82,11 @@ export default function PlacePage() {
               <TimePicker
                 onTimeSelect={handleSelectTime}
                 selectedDate={selectedDateObj}
+                onCheckoutTimeChange={handleCheckoutTime}
               />
             </div>
           ) : (
-            <p className="font-semibold text-2xl mt-10">
+            <p className="mt-10 text-2xl font-semibold">
               You cannot book a place in the past.
             </p>
           )}
@@ -89,16 +95,17 @@ export default function PlacePage() {
           <BookingWidget
             place={place}
             selectedTime={selectedTime}
+            checkoutTime={checkoutTime}
             selectedDate={selectedDateObj.toLocaleDateString()}
           />
         </div>
       </div>
-      <div className="bg-slate-100 -mx-8 px-8 py-8 border-t">
+      <div className="-mx-8 border-t bg-slate-100 px-8 py-8">
         <div>
-          <h2 className="font-semibold text-2xl">Extra info</h2>
+          <h2 className="text-2xl font-semibold">Extra info</h2>
         </div>
         <div>
-          <div className="mb-4 mt-2 text-sm text-gray-700 leading-5">
+          <div className="mb-4 mt-2 text-sm leading-5 text-gray-700">
             {place.extraInfo}
           </div>
         </div>

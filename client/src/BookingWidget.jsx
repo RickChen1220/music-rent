@@ -4,12 +4,16 @@ import axios from "axios";
 import { UserContext } from "./UserContext";
 import { DateTime } from "luxon";
 
-export default function BookingWidget({ place, selectedTime, selectedDate }) {
+export default function BookingWidget({
+  place,
+  selectedTime,
+  selectedDate,
+  checkoutTime,
+}) {
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [redirect, setRedirect] = useState("");
-  const [checkOutTime, setCheckOutTime] = useState("");
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -19,17 +23,13 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
   }, [user]);
 
   const selectedTimeObj = DateTime.fromFormat(selectedTime, "hh:mm");
-  const checkOutTimeObj = selectedTimeObj.plus({ hours: 1 });
-  const formattedCheckOutTime = checkOutTimeObj.toFormat("HH:mm");
-  useEffect(() => {
-    setCheckOutTime(formattedCheckOutTime);
-  }, [selectedTime]);
+  const checkoutTimeObj = DateTime.fromFormat(checkoutTime, "hh:mm");
 
   async function bookThisPlace() {
     const response = await axios.post("/bookings", {
       date: selectedDate,
       checkIn: selectedTimeObj,
-      checkOut: checkOutTimeObj,
+      checkOut: checkoutTimeObj,
       numberOfGuests,
       name,
       phone,
@@ -65,7 +65,7 @@ export default function BookingWidget({ place, selectedTime, selectedDate }) {
           <div className="border-t border-gray-400 py-3 px-4">
             {selectedTime ? (
               <p>
-                Your are booking this room from {selectedTime} to {checkOutTime}
+                Your are booking this room from {selectedTime} to {checkoutTime}
               </p>
             ) : (
               <p>Please select a time</p>

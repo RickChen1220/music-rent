@@ -3,12 +3,16 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { DateTime } from "luxon";
 
-export default function TimePicker({ onTimeSelect, selectedDate }) {
+export default function TimePicker({
+  onTimeSelect,
+  selectedDate,
+  onCheckoutTimeChange,
+}) {
   const { id } = useParams();
   const [place, setPlace] = useState("");
   const [clickedSlots, setClickedSlots] = useState({});
   const [selectedTime, setSelectedTime] = useState("");
-  const [cannotPick, setCannotPick] = useState("");
+  const [checkoutTime, setCheckoutTime] = useState("");
 
   useEffect(() => {
     if (!id) {
@@ -20,13 +24,8 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
   }, [id]);
 
   useEffect(() => {
-    if (selectedTime) {
-      const selectedTimeObj = DateTime.fromFormat(selectedTime, "HH:mm");
-      const cannotPickObj = selectedTimeObj.plus({ minutes: 30 });
-      const formattedCannotPick = cannotPickObj.toFormat("HH:mm");
-      setCannotPick(formattedCannotPick);
-    }
-  }, [selectedTime]);
+    console.log("selectedCheckOutTime:", checkoutTime);
+  }, [checkoutTime]);
 
   if (!place) return "";
 
@@ -81,13 +80,11 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
     const timeSlotObj = DateTime.fromJSDate(timeSlot);
     const timeSlotLabel = timeSlotObj.toFormat("EEEE, LLLL d");
     const timeSlotTime = timeSlotObj.toFormat("HH:mm");
-    const isDisabled = timeSlotTime === cannotPick;
 
     timeSlots.push({
       timeSlotObj,
       timeSlotLabel,
       timeSlotTime,
-      isDisabled,
     });
 
     startTime = startTime.plus({ minutes: 30 });
@@ -102,8 +99,15 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
     };
     setSelectedTime(isSelected ? "" : selectedTime);
     onTimeSelect(isSelected ? "" : selectedTime);
+    setCheckoutTime(""); // Reset the checkout time
+    onCheckoutTimeChange(""); // Reset the checkout time
     setClickedSlots(updatedClickedSlots);
     console.log("selectedTime:", isSelected ? "Now is empty" : selectedTime);
+  }
+
+  function handleCheckoutTimeChange(selectedTime) {
+    setCheckoutTime(selectedTime);
+    onCheckoutTimeChange(selectedTime);
   }
 
   return (
@@ -117,8 +121,7 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
           className="flex flex-wrap justify-center"
         >
           {timeSlots.map((timeSlot) => {
-            const { timeSlotObj, timeSlotLabel, timeSlotTime, isDisabled } =
-              timeSlot;
+            const { timeSlotObj, timeSlotLabel, timeSlotTime } = timeSlot;
 
             const timeSlotBoxClasses = `m-2 p-2 rounded-2xl ${
               clickedSlots[timeSlotTime] ? "bg-primary text-white" : ""
@@ -130,7 +133,6 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
                 data-cy={`book-now-time-slot-box-${timeSlotObj.hour}-${timeSlotObj.minute}`}
                 className={timeSlotBoxClasses}
                 onClick={() => handleTimeChange(timeSlotTime)}
-                disabled={isDisabled}
               >
                 <span hidden className="text-center text-xs leading-none">
                   {timeSlotLabel}
@@ -143,6 +145,43 @@ export default function TimePicker({ onTimeSelect, selectedDate }) {
           })}
         </div>
       </div>
+      {selectedTime && (
+        <div className="mt-4 rounded-2xl p-2 shadow">
+          <div className="text-center font-medium">
+            Select a time slot for checkout:
+          </div>
+          <div className="flex flex-wrap justify-center">
+            {timeSlots
+              .filter(
+                (timeSlot) =>
+                  timeSlot.timeSlotObj >
+                  DateTime.fromFormat(selectedTime, "HH:mm").plus({
+                    minutes: 30,
+                  })
+              )
+              .map((timeSlot) => {
+                const { timeSlotObj, timeSlotTime } = timeSlot;
+
+                const checkoutTimeBoxClasses = `m-2 p-2 rounded-2xl ${
+                  checkoutTime === timeSlotTime ? "bg-primary text-white" : ""
+                }`;
+
+                return (
+                  <button
+                    key={`checkout-${timeSlotObj.toISO()}`}
+                    data-cy={`checkout-time-slot-box-${timeSlotObj.hour}-${timeSlotObj.minute}`}
+                    className={checkoutTimeBoxClasses}
+                    onClick={() => handleCheckoutTimeChange(timeSlotTime)}
+                  >
+                    <span className="text-md text-center leading-none">
+                      {timeSlotTime}
+                    </span>
+                  </button>
+                );
+              })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
