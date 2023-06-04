@@ -22,7 +22,6 @@ export default function TimePicker({
     hour: place.openTime,
     minute: 0,
   });
-
   // If it's today and a selected time exists, set the minimum time to be after the selected time
   if(isToday && selectedTime) {
     minimumTime = DateTime.fromFormat(selectedTime, "HH:mm");
@@ -55,13 +54,22 @@ export default function TimePicker({
     minute: 0,
   });
 
-  let endTime = DateTime.fromJSDate(selectedDate);
-  endTime = endTime.set({
+  let bookingEndTime = DateTime.fromJSDate(selectedDate);
+  bookingEndTime = bookingEndTime.set({
     hour: place.closeTime,
     minute: 0,
   });
-  // Subtract one hour from closing time to allow for the last booking to end at the closing time
-  /* endTime = endTime.minus({ minutes: 30 }); */
+  
+  //Subtract one hour from closing time to allow for the last booking to end at the closing time
+  bookingEndTime = bookingEndTime.minus({ minutes: 30 });
+
+  
+
+  let checkOutEndTime = DateTime.fromJSDate(selectedDate).set({
+    hour: place.closeTime,
+    minute: 0,
+  });
+
 
   if (isToday) {
     // If the selected date is today, set the start time to the current time or the opening time of the place
@@ -80,12 +88,12 @@ export default function TimePicker({
       }
     }
     // If the current time is after the closing time of the place, don't show any time slots
-    if (startTime >= endTime) {
+    if (startTime >= bookingEndTime) {
       return null;
     }
   }
 
-  while (startTime < endTime) {
+  while (startTime < bookingEndTime) {
     // If the selected date is today, skip time slots that are before the current time
     const timeSlot = new Date(startTime);
     if (isToday && timeSlot <= now.toJSDate()) {
@@ -126,15 +134,27 @@ export default function TimePicker({
   }
 
   // Calculate the checkout start time (one hour after the selected time)
-  const checkoutStartTime = DateTime.fromFormat(selectedTime, "HH:mm").plus({
-    hours: 1,
-  });
+  let checkoutStartTime;
+  if (selectedTime) {
+    const [selectedHour, selectedMinute] = selectedTime.split(":");
+    checkoutStartTime = DateTime.fromJSDate(selectedDate).set(
+      {
+        hour: selectedHour,
+        minute: selectedMinute
+      }).plus({hour:1});
+  } else {
+    checkoutStartTime = DateTime.fromJSDate(selectedDate).set({
+      hour: place.openTime,
+      minute: 0,
+    });
+  }
+  
 
   // Filter the time slots for the checkout time range
   const checkoutTimeSlots = timeSlotsFiltered.filter(
     (timeSlot) =>
       timeSlot.timeSlotObj >= checkoutStartTime &&
-      timeSlot.timeSlotObj <= endTime
+      timeSlot.timeSlotObj <= checkOutEndTime
   );
 
   return (
