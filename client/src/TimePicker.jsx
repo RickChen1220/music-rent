@@ -17,13 +17,13 @@ export default function TimePicker({
   const now = DateTime.now();
   const isToday = selectedDate.toDateString() === now.toJSDate().toDateString();
 
-   // Calculate the minimum time for time slot generation based on the selected time
-   let minimumTime = DateTime.fromJSDate(selectedDate).set({
+  // Calculate the minimum time for time slot generation based on the selected time
+  let minimumTime = DateTime.fromJSDate(selectedDate).set({
     hour: place.openTime,
     minute: 0,
   });
   // If it's today and a selected time exists, set the minimum time to be after the selected time
-  if(isToday && selectedTime) {
+  if (isToday && selectedTime) {
     minimumTime = DateTime.fromFormat(selectedTime, "HH:mm");
   }
 
@@ -42,12 +42,11 @@ export default function TimePicker({
 
   if (!place) return "";
 
-
-
-
   // Filter the time slots to include only the slots after the minimum time
-  const timeSlots= [];
-  let timeSlotsFiltered = timeSlots.filter(timeSlot => timeSlot.timeSlotObj >= minimumTime);
+  const timeSlots = [];
+  let timeSlotsFiltered = timeSlots.filter(
+    (timeSlot) => timeSlot.timeSlotObj >= minimumTime
+  );
   let startTime = DateTime.fromJSDate(selectedDate);
   startTime = startTime.set({
     hour: place.openTime,
@@ -59,17 +58,49 @@ export default function TimePicker({
     hour: place.closeTime,
     minute: 0,
   });
-  
+
   //Subtract one hour from closing time to allow for the last booking to end at the closing time
   bookingEndTime = bookingEndTime.minus({ minutes: 30 });
 
-  
+  // Calculate the checkout start time (one hour after the selected time)
+  let checkoutStartTime;
+  if (selectedTime) {
+    const [selectedHour, selectedMinute] = selectedTime.split(":");
+    checkoutStartTime = DateTime.fromJSDate(selectedDate)
+      .set({
+        hour: selectedHour,
+        minute: selectedMinute,
+      })
+      .plus({ hours: 1 });
+  } else {
+    checkoutStartTime = DateTime.fromJSDate(selectedDate).set({
+      hour: place.openTime,
+      minute: 0,
+    });
+  }
 
-  let checkOutEndTime = DateTime.fromJSDate(selectedDate).set({
+  // Filter the time slots for the checkout time range
+  const checkoutEndTime = DateTime.fromJSDate(selectedDate).set({
     hour: place.closeTime,
     minute: 0,
   });
 
+  const checkoutTimeSlots = [];
+  let checkoutTimeSlotsFiltered = checkoutTimeSlots.filter(
+    (timeSlot) => timeSlot.timeSlotObj >= checkoutStartTime
+  );
+
+  while (checkoutStartTime <= checkoutEndTime) {
+    const timeSlotObj = checkoutStartTime;
+    const timeSlotTime = timeSlotObj.toFormat("HH:mm");
+
+    checkoutTimeSlotsFiltered.push({
+      timeSlotObj,
+      timeSlotTime,
+    });
+
+    checkoutStartTime = checkoutStartTime.plus({ minutes: 30 });
+  }
 
   if (isToday) {
     // If the selected date is today, set the start time to the current time or the opening time of the place
@@ -133,30 +164,6 @@ export default function TimePicker({
     onCheckoutTimeChange(selectedTime);
   }
 
-  // Calculate the checkout start time (one hour after the selected time)
-  let checkoutStartTime;
-  if (selectedTime) {
-    const [selectedHour, selectedMinute] = selectedTime.split(":");
-    checkoutStartTime = DateTime.fromJSDate(selectedDate).set(
-      {
-        hour: selectedHour,
-        minute: selectedMinute
-      }).plus({hour:1});
-  } else {
-    checkoutStartTime = DateTime.fromJSDate(selectedDate).set({
-      hour: place.openTime,
-      minute: 0,
-    });
-  }
-  
-
-  // Filter the time slots for the checkout time range
-  const checkoutTimeSlots = timeSlotsFiltered.filter(
-    (timeSlot) =>
-      timeSlot.timeSlotObj >= checkoutStartTime &&
-      timeSlot.timeSlotObj <= checkOutEndTime
-  );
-
   return (
     <div>
       <div className="rounded-2xl p-2 shadow">
@@ -198,26 +205,26 @@ export default function TimePicker({
             Select a time slot for checkout:
           </div>
           <div className="flex flex-wrap justify-center">
-            {checkoutTimeSlots.map((timeSlot) => {
-                const { timeSlotObj, timeSlotTime } = timeSlot;
+            {checkoutTimeSlotsFiltered.map((timeSlot) => {
+              const { timeSlotObj, timeSlotTime } = timeSlot;
 
-                const checkoutTimeBoxClasses = `m-2 p-2 rounded-2xl ${
-                  checkoutTime === timeSlotTime ? "bg-primary text-white" : ""
-                }`;
+              const checkoutTimeBoxClasses = `m-2 p-2 rounded-2xl ${
+                checkoutTime === timeSlotTime ? "bg-primary text-white" : ""
+              }`;
 
-                return (
-                  <button
-                    key={`checkout-${timeSlotObj.toISO()}`}
-                    data-cy={`checkout-time-slot-box-${timeSlotObj.hour}-${timeSlotObj.minute}`}
-                    className={checkoutTimeBoxClasses}
-                    onClick={() => handleCheckoutTimeChange(timeSlotTime)}
-                  >
-                    <span className="text-md text-center leading-none">
-                      {timeSlotTime}
-                    </span>
-                  </button>
-                );
-              })}
+              return (
+                <button
+                  key={`checkout-${timeSlotObj.toISO()}`}
+                  data-cy={`checkout-time-slot-box-${timeSlotObj.hour}-${timeSlotObj.minute}`}
+                  className={checkoutTimeBoxClasses}
+                  onClick={() => handleCheckoutTimeChange(timeSlotTime)}
+                >
+                  <span className="text-md text-center leading-none">
+                    {timeSlotTime}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
