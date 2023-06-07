@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import AddressLink from "../AddressLink";
 import PlaceGallery from "../PlaceGallery";
 import BookingDates from "../BookingDates";
+import { DateTime } from "luxon";
 
 export default function BookingPage() {
   const { id } = useParams();
@@ -23,18 +24,15 @@ export default function BookingPage() {
     return "";
   }
 
-  const checkInTime = new Date(booking.checkIn);
-  const checkOutTime = new Date(booking.checkOut);
-  const checkIn = checkInTime.toLocaleTimeString([], {
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const checkOut = checkOutTime.toLocaleTimeString([], {
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const checkInTime = DateTime.fromISO(booking.checkIn)
+  const checkOutTime = DateTime.fromISO(booking.checkOut);
+  const checkIn = checkInTime.toFormat("HH:mm");
+  const checkOut = checkOutTime.toFormat("HH:mm");
+
+  const duration = checkOutTime.diff(checkInTime, "hours");
+  const hours = duration.hours;
+
+  console.log("hours:", hours);
 
   return (
     <div className="my-8">
@@ -42,7 +40,7 @@ export default function BookingPage() {
       <AddressLink>{booking.place.address}</AddressLink>
       <div className="bg-gray-200 p-6 my-6 rounded-2xl items-center flex justify-between">
         <div>
-          <h2 className="text-2xl mb-4">Your booking information:</h2>
+          <h2 className="text-2xl mb-4">Your are booking this room for {hours} hours.</h2>
           <div className="mb-4 flex text-lg">
           <BookingDates booking={booking} checkIn={checkIn} checkOut={checkOut} />
           &nbsp;

@@ -14,7 +14,11 @@ export default function BookingWidget({
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [redirect, setRedirect] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
   const { user } = useContext(UserContext);
+
+  const selectedTimeObj = DateTime.fromFormat(selectedTime, "hh:mm");
+  const checkoutTimeObj = DateTime.fromFormat(checkoutTime, "hh:mm");
 
   useEffect(() => {
     if (user) {
@@ -22,8 +26,14 @@ export default function BookingWidget({
     }
   }, [user]);
 
-  const selectedTimeObj = DateTime.fromFormat(selectedTime, "hh:mm");
-  const checkoutTimeObj = DateTime.fromFormat(checkoutTime, "hh:mm");
+  useEffect(() => {
+    // Calculate the totalPrice whenever the relevant inputs change
+    const duration = checkoutTimeObj.diff(selectedTimeObj, "hours");
+    const hours = duration.hours;
+    const totalPrice = hours * place.price;
+
+    setTotalPrice(totalPrice);
+  }, [selectedTimeObj, checkoutTimeObj, place.price]);
 
   async function bookThisPlace() {
     const response = await axios.post("/bookings", {
@@ -34,7 +44,7 @@ export default function BookingWidget({
       name,
       phone,
       place: place._id,
-      price: place.price,
+      price: totalPrice,
     });
     const bookingId = response.data._id;
     setRedirect(`/account/bookings/${bookingId}`);
@@ -43,10 +53,6 @@ export default function BookingWidget({
   if (redirect) {
     return <Navigate to={redirect} />;
   }
-
-  /*   console.log("selectedDate :", selectedDate);
-  console.log("checkOutTimeObj :", checkOutTimeObj);
-  console.log("selectedTimeObj :", selectedTimeObj); */
 
   return (
     <div>

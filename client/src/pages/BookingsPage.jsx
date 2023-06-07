@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import AccountNav from "../AccountNav";
 import axios from "axios";
 import PlaceImg from "../PlaceImg";
-import { differenceInCalendarDays, format } from "date-fns";
 import BookingDates from "../BookingDates";
 
 export default function BookingsPage() {
