@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 
-export default function AccountNav() {
+export default function AccountNav({ user }) {
   const { pathname } = useLocation();
   let subpage = pathname.split("/")?.[2];
   if (subpage === undefined) {
@@ -16,16 +16,18 @@ export default function AccountNav() {
     return classes;
   }
   return (
-    <nav className="w-full flex justify-center mt-8 gap-2 mb-8">
+    <nav className="mt-8 mb-8 flex w-full justify-center gap-2">
       <Link className={linkClasses("profile")} to={"/account"}>
         My account
       </Link>
       <Link className={linkClasses("bookings")} to={"/account/bookings"}>
         My bookings
       </Link>
-      <Link className={linkClasses("places")} to={"/account/places"}>
-        My rooms
-      </Link>
+      {user?.isAdmin && ( // Only render the link if the user is an admin
+        <Link className={linkClasses("places")} to={"/account/places"}>
+          My rooms
+        </Link>
+      )}
     </nav>
   );
 }

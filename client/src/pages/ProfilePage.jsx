@@ -23,6 +23,7 @@ export default function AccountPage() {
   if (!ready) {
     return "Lodaing...";
   }
+  console.log(user);
 
   if (ready && !user && !redirect) {
     return <Navigate to={"/login"} />;
@@ -34,11 +35,11 @@ export default function AccountPage() {
 
   return (
     <div>
-      <AccountNav />
+      <AccountNav user={user} />
       {subpage === "profile" && (
-        <div className="text-center max-w-lg mx-auto">
+        <div className="mx-auto max-w-lg text-center">
           Logged in as {user.name} ({user.email})<br />
-          <button onClick={logout} className="primary max-w-sm mt-2">
+          <button onClick={logout} className="primary mt-2 max-w-sm">
             Log out
           </button>
         </div>

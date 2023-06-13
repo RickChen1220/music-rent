@@ -49,12 +49,13 @@ app.get("/test", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, isAdmin } = req.body;
   try {
     const user = await User.create({
       name,
       email,
       password: bcrypt.hashSync(password, bcryptSalt),
+      isAdmin,
     });
 
     res.json(user);
@@ -95,8 +96,8 @@ app.get("/profile", (req, res) => {
     //Verify is a jsonWebToken function
     jwt.verify(token, tokenSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const { name, email, id } = await User.findById(userData.id);
-      res.json({ name, email, id });
+      const { name, email, id, isAdmin } = await User.findById(userData.id);
+      res.json({ name, email, id, isAdmin });
     });
   } else {
     res.json(null);
