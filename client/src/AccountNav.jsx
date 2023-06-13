@@ -15,6 +15,9 @@ export default function AccountNav({ user }) {
     }
     return classes;
   }
+  
+  const isAdmin = user && user.isSupplier;
+
   return (
     <nav className="mt-8 mb-8 flex w-full justify-center gap-2">
       <Link className={linkClasses("profile")} to={"/account"}>
@@ -23,7 +26,7 @@ export default function AccountNav({ user }) {
       <Link className={linkClasses("bookings")} to={"/account/bookings"}>
         My bookings
       </Link>
-      {user?.isAdmin && ( // Only render the link if the user is an admin
+      {isAdmin && ( // Only render the link if user.isAdmin is true
         <Link className={linkClasses("places")} to={"/account/places"}>
           My rooms
         </Link>

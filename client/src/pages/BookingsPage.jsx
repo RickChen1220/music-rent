@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../UserContext";
 import { Link } from "react-router-dom";
 import AccountNav from "../AccountNav";
 import axios from "axios";
@@ -7,6 +8,7 @@ import BookingDates from "../BookingDates";
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState("");
+  const { user } = useContext(UserContext);
   useEffect(() => {
     axios.get("/bookings").then((response) => {
       setBookings(response.data);
@@ -14,11 +16,12 @@ export default function BookingsPage() {
   }, []);
   return (
     <div>
-      <AccountNav />
+      <AccountNav user={user} />
       <div>
         {bookings?.length > 0 &&
           bookings.map((booking) => (
             <Link
+              key={booking._id} // Assign a unique key prop
               to={`/account/bookings/${booking._id}`}
               className="flex gap-4 bg-slate-200 rounded-2xl overflow-hidden border border-gray-300 my-4"
             >

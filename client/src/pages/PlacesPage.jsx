@@ -1,11 +1,13 @@
 import AccountNav from "../AccountNav";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../UserContext";
 import axios from "axios";
 import PlaceImg from "../PlaceImg";
 
 export default function PlacesPage() {
   const [places, setPlaces] = useState("");
+  const { user } = useContext(UserContext);
   useEffect(() => {
     axios.get("/user-places").then(({ data }) => {
       setPlaces(data);
@@ -13,7 +15,7 @@ export default function PlacesPage() {
   }, []);
   return (
     <div>
-      <AccountNav />
+      <AccountNav user={user}/>
       <div className="text-center">
         <Link
           className="inline-flex gap-1 bg-primary text-white
