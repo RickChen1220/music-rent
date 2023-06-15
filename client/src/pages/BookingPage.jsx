@@ -24,15 +24,21 @@ export default function BookingPage() {
     return "";
   }
 
-  const checkInTime = DateTime.fromISO(booking.checkIn)
-  const checkOutTime = DateTime.fromISO(booking.checkOut);
+  const bookingDate = DateTime.fromISO(booking.date).toFormat("yyyy-MM-dd");
+  const checkInTime = DateTime.fromFormat(bookingDate + " " + booking.checkIn, "yyyy-MM-dd HH:mm");
+  const checkOutTime = DateTime.fromFormat(bookingDate + " " + booking.checkOut, "yyyy-MM-dd HH:mm");
   const checkIn = checkInTime.toFormat("HH:mm");
   const checkOut = checkOutTime.toFormat("HH:mm");
 
-  const duration = checkOutTime.diff(checkInTime, "hours");
-  const hours = duration.hours;
+  let duration = checkOutTime.diff(checkInTime, "hours");
+  let hours = duration.hours;
 
-  console.log("hours:", hours);
+
+  if (hours < 0) {
+    duration = duration.plus({ hours: 12 });
+    hours = duration.hours;
+  }
+
 
   return (
     <div className="my-8">
@@ -42,7 +48,7 @@ export default function BookingPage() {
         <div>
           <h2 className="text-2xl mb-4">Your are booking this room for {hours} hours.</h2>
           <div className="mb-4 flex text-lg">
-          <BookingDates booking={booking} checkIn={checkIn} checkOut={checkOut} />
+          <BookingDates booking={booking} checkIn={booking.checkIn} checkOut={booking.checkOut} />
           &nbsp;
           <span className="font-bold">{checkIn} to {checkOut}</span>
           </div>

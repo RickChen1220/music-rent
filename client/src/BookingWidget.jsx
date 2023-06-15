@@ -36,10 +36,12 @@ export default function BookingWidget({
   }, [selectedTimeObj, checkoutTimeObj, place.price]);
 
   async function bookThisPlace() {
+    const formattedSelectedTime = selectedTimeObj.toFormat("hh:mm");
+    const formattedCheckoutTime = checkoutTimeObj.toFormat("hh:mm");
     const response = await axios.post("/bookings", {
       date: selectedDate,
-      checkIn: selectedTimeObj,
-      checkOut: checkoutTimeObj,
+      checkIn: formattedSelectedTime,
+      checkOut: formattedCheckoutTime,
       numberOfGuests,
       name,
       phone,

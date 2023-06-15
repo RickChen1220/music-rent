@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PhotosUploader from "../PhotosUploader";
 import Facilities from "../Facilities";
 import AccountNav from "../AccountNav";
@@ -6,9 +6,11 @@ import axios from "axios";
 import { Navigate, useParams } from "react-router-dom";
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
+import { UserContext } from "../UserContext";
 
 export default function PlacesFormPage() {
   const { id } = useParams();
+  const { user } = useContext(UserContext);
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -80,7 +82,7 @@ export default function PlacesFormPage() {
 
   return (
     <Container maxWidth=" lg">
-      <AccountNav />
+      <AccountNav user={user} />
       <form onSubmit={savePlace}>
         {inputHeader("Title")}
         <input
