@@ -7,18 +7,18 @@ export default function BookingDates({
   checkOut,
 }) {
   const checkInDate = DateTime.fromISO(booking.date).toFormat("yyyy-MM-dd");
- /*  console.log("checkInDate:", checkInDate); */
+  console.log("checkInDate:", checkInDate);
 
   return (
     <div className={"flex gap-2" + className}>
-      <div className="flex gap-1 items-center">
+      <div className="flex items-center gap-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-6 h-6"
+          className="h-6 w-6"
         >
           <path
             strokeLinecap="round"

@@ -13,6 +13,7 @@ export default function TimePicker({
   const [clickedSlots, setClickedSlots] = useState({});
   const [selectedTime, setSelectedTime] = useState("");
   const [checkoutTime, setCheckoutTime] = useState("");
+  const [bookings, setBookings] = useState([]);
 
   const now = DateTime.now();
   const isToday = selectedDate.toDateString() === now.toJSDate().toDateString();
@@ -35,6 +36,20 @@ export default function TimePicker({
       setPlace(res.data);
     });
   }, [id]);
+
+  // Fetch the bookings for the selected place and date
+  useEffect(() => {
+    if (id && selectedDate) {
+      axios
+        .get(`/bookings/`, { params: { date: selectedDate } })
+        .then((res) => {
+          setBookings(res.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching bookings:", error);
+        });
+    }
+  }, [id, selectedDate]);
 
   useEffect(() => {
     console.log("selectedCheckOutTime:", checkoutTime);
@@ -135,10 +150,20 @@ export default function TimePicker({
     const timeSlotLabel = timeSlotObj.toFormat("EEEE, LLLL d");
     const timeSlotTime = timeSlotObj.toFormat("HH:mm");
 
+    // Check if the time slot is already booked
+
+    const isBooked = bookings.some(
+      (booking) =>
+        booking.checkIn === timeSlotTime ||
+        (timeSlotObj >= DateTime.fromFormat(booking.checkIn, "HH:mm") &&
+          timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm"))
+    );
+
     timeSlotsFiltered.push({
       timeSlotObj,
       timeSlotLabel,
       timeSlotTime,
+      isBooked,
     });
 
     startTime = startTime.plus({ minutes: 30 });
@@ -175,18 +200,19 @@ export default function TimePicker({
           className="flex flex-wrap justify-center"
         >
           {timeSlotsFiltered.map((timeSlot) => {
-            const { timeSlotObj, timeSlotLabel, timeSlotTime } = timeSlot;
+            const { timeSlotObj, timeSlotLabel, timeSlotTime, isBooked } =
+              timeSlot;
 
             const timeSlotBoxClasses = `m-2 p-2 rounded-2xl ${
               clickedSlots[timeSlotTime] ? "bg-primary text-white" : ""
-            }`;
+            } ${isBooked ? "bg-gray-300 text-gray-600" : ""}`;
 
             return (
               <button
                 key={timeSlotObj.toISO()}
                 data-cy={`book-now-time-slot-box-${timeSlotObj.hour}-${timeSlotObj.minute}`}
                 className={timeSlotBoxClasses}
-                onClick={() => handleTimeChange(timeSlotTime)}
+                onClick={() => !isBooked && handleTimeChange(timeSlotTime)}
               >
                 <span hidden className="text-center text-xs leading-none">
                   {timeSlotLabel}
