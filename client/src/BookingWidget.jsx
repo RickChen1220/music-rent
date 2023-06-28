@@ -19,6 +19,7 @@ export default function BookingWidget({
 
   const selectedTimeObj = DateTime.fromFormat(selectedTime, "hh:mm");
   const checkoutTimeObj = DateTime.fromFormat(checkoutTime, "hh:mm");
+  const selectedDateObj = DateTime.fromISO(selectedDate).toJSDate();
 
   useEffect(() => {
     if (user) {
@@ -35,11 +36,17 @@ export default function BookingWidget({
     setTotalPrice(totalPrice);
   }, [selectedTimeObj, checkoutTimeObj, place.price]);
 
+  const formattedSelectedTime = selectedTimeObj.toFormat("HH:mm");
+  const formattedCheckoutTime = checkoutTimeObj.toFormat("HH:mm");
+
+  console.log("selectedDate", selectedDateObj);
+ /*  console.log("formattedSelectedTime", formattedSelectedTime);
+  console.log("formattedCheckoutTime", formattedCheckoutTime); */
+
   async function bookThisPlace() {
-    const formattedSelectedTime = selectedTimeObj.toFormat("hh:mm");
-    const formattedCheckoutTime = checkoutTimeObj.toFormat("hh:mm");
+  
     const response = await axios.post("/bookings", {
-      date: selectedDate,
+      date: selectedDateObj,
       checkIn: formattedSelectedTime,
       checkOut: formattedCheckoutTime,
       numberOfGuests,
@@ -66,7 +73,7 @@ export default function BookingWidget({
           <div>
             {selectedDate && (
               <div className=" py-3 px-4">
-                <p>Selected Date: {selectedDate}</p>
+                <p>Selected Date: {selectedDateObj.toDateString()}</p>
               </div>
             )}
           </div>

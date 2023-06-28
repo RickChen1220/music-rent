@@ -11,6 +11,7 @@ export default function TimePicker({
   const { id } = useParams();
   const [place, setPlace] = useState("");
   const [clickedSlots, setClickedSlots] = useState({});
+  const [clickedCheckoutSlots, setClickedCheckoutSlots] = useState({});
   const [selectedTime, setSelectedTime] = useState("");
   const [checkoutTime, setCheckoutTime] = useState("");
   const [bookings, setBookings] = useState([]);
@@ -78,7 +79,8 @@ export default function TimePicker({
   bookingEndTime = bookingEndTime.minus({ minutes: 30 });
 
   // Calculate the checkout start time (one hour after the selected time)
-  let checkoutStartTime;
+  let checkoutStartTime = null;
+
   if (selectedTime) {
     const [selectedHour, selectedMinute] = selectedTime.split(":");
     checkoutStartTime = DateTime.fromJSDate(selectedDate)
@@ -101,6 +103,7 @@ export default function TimePicker({
   });
 
   const checkoutTimeSlots = [];
+
   let checkoutTimeSlotsFiltered = checkoutTimeSlots.filter(
     (timeSlot) => timeSlot.timeSlotObj >= checkoutStartTime
   );
@@ -109,9 +112,26 @@ export default function TimePicker({
     const timeSlotObj = checkoutStartTime;
     const timeSlotTime = timeSlotObj.toFormat("HH:mm");
 
+    // Check if the time slot is already booked
+
+    const isBooked = bookings.some(
+      (booking) =>
+        timeSlotObj >= DateTime.fromFormat(booking.checkIn, "HH:mm") &&
+        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm")
+    );
+
+    // Check if the time slot is within the check-in and check-out range
+    const isInCheckInOutRange = bookings.some(
+      (booking) =>
+        timeSlotObj >= DateTime.fromFormat(booking.checkIn, "HH:mm") &&
+        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm")
+    );
+
     checkoutTimeSlotsFiltered.push({
       timeSlotObj,
       timeSlotTime,
+      isBooked,
+      disabled: isInCheckInOutRange,
     });
 
     checkoutStartTime = checkoutStartTime.plus({ minutes: 30 });
@@ -154,9 +174,15 @@ export default function TimePicker({
 
     const isBooked = bookings.some(
       (booking) =>
-        booking.checkIn === timeSlotTime ||
-        (timeSlotObj >= DateTime.fromFormat(booking.checkIn, "HH:mm") &&
-          timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm"))
+        timeSlotObj >= DateTime.fromFormat(booking.checkIn, "HH:mm") &&
+        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm")
+    );
+
+    // Check if the time slot is within the check-in and check-out range
+    const isInCheckInOutRange = bookings.some(
+      (booking) =>
+        timeSlotObj >= DateTime.fromFormat(booking.checkIn, "HH:mm") &&
+        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm")
     );
 
     timeSlotsFiltered.push({
@@ -164,6 +190,7 @@ export default function TimePicker({
       timeSlotLabel,
       timeSlotTime,
       isBooked,
+      disabled: isInCheckInOutRange,
     });
 
     startTime = startTime.plus({ minutes: 30 });
@@ -181,12 +208,18 @@ export default function TimePicker({
     setCheckoutTime(""); // Reset the checkout time
     onCheckoutTimeChange(""); // Reset the checkout time
     setClickedSlots(updatedClickedSlots);
+    setClickedCheckoutSlots({}); // Reset the checkout time
     console.log("selectedTime:", isSelected ? "Now is empty" : selectedTime);
   }
 
   function handleCheckoutTimeChange(selectedTime) {
     setCheckoutTime(selectedTime);
     onCheckoutTimeChange(selectedTime);
+    const isSelected = clickedCheckoutSlots[selectedTime];
+    const updatedClickedCheckoutSlots = {
+      [selectedTime]: !isSelected,
+    };
+    setClickedCheckoutSlots(updatedClickedCheckoutSlots);
   }
 
   return (
@@ -200,19 +233,27 @@ export default function TimePicker({
           className="flex flex-wrap justify-center"
         >
           {timeSlotsFiltered.map((timeSlot) => {
-            const { timeSlotObj, timeSlotLabel, timeSlotTime, isBooked } =
-              timeSlot;
+            const {
+              timeSlotObj,
+              timeSlotLabel,
+              timeSlotTime,
+              isBooked,
+              disabled,
+            } = timeSlot;
 
             const timeSlotBoxClasses = `m-2 p-2 rounded-2xl ${
               clickedSlots[timeSlotTime] ? "bg-primary text-white" : ""
-            } ${isBooked ? "bg-gray-300 text-gray-600" : ""}`;
+            } ${isBooked ? "bg-red-400 text-white" : ""}`;
 
             return (
               <button
                 key={timeSlotObj.toISO()}
                 data-cy={`book-now-time-slot-box-${timeSlotObj.hour}-${timeSlotObj.minute}`}
                 className={timeSlotBoxClasses}
-                onClick={() => !isBooked && handleTimeChange(timeSlotTime)}
+                onClick={() =>
+                  !isBooked && !disabled && handleTimeChange(timeSlotTime)
+                }
+                disabled={disabled}
               >
                 <span hidden className="text-center text-xs leading-none">
                   {timeSlotLabel}
@@ -232,18 +273,26 @@ export default function TimePicker({
           </div>
           <div className="flex flex-wrap justify-center">
             {checkoutTimeSlotsFiltered.map((timeSlot) => {
-              const { timeSlotObj, timeSlotTime } = timeSlot;
+              const { timeSlotObj, timeSlotTime, isBooked, disabled } =
+                timeSlot;
 
               const checkoutTimeBoxClasses = `m-2 p-2 rounded-2xl ${
-                checkoutTime === timeSlotTime ? "bg-primary text-white" : ""
-              }`;
+                clickedCheckoutSlots[timeSlotTime]
+                  ? "bg-primary text-white"
+                  : ""
+              } ${isBooked ? "bg-gray-300 text-gray-600" : ""}`;
 
               return (
                 <button
                   key={`checkout-${timeSlotObj.toISO()}`}
                   data-cy={`checkout-time-slot-box-${timeSlotObj.hour}-${timeSlotObj.minute}`}
                   className={checkoutTimeBoxClasses}
-                  onClick={() => handleCheckoutTimeChange(timeSlotTime)}
+                  onClick={() =>
+                    !isBooked &&
+                    !disabled &&
+                    handleCheckoutTimeChange(timeSlotTime)
+                  }
+                  disabled={disabled}
                 >
                   <span className="text-md text-center leading-none">
                     {timeSlotTime}

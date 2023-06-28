@@ -10,7 +10,7 @@ import TimePicker from "../TimePicker";
 export default function PlacePage() {
   const { id } = useParams();
   const [place, setPlace] = useState(null);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [selectedTime, setSelectedTime] = useState("");
   const [checkoutTime, setCheckoutTime] = useState("");
   const [showCalendar, setShowCalendar] = useState(true);
@@ -31,6 +31,10 @@ export default function PlacePage() {
     setShowCalendar(true);
   }
 
+  function handleSetDate(newDate) {
+    setDate(newDate);
+  }
+
   useEffect(() => {
     if (!id) {
       return;
@@ -48,6 +52,7 @@ export default function PlacePage() {
 
   // Create a new Date object using the selected date state
   const selectedDateObj = new Date(date);
+  const selectedDateOnly = selectedDateObj.toISOString().split("T")[0];
 
   return (
     <div className="mx-0 mt-4 bg-slate-100 px-8 pt-8 ">
@@ -73,7 +78,7 @@ export default function PlacePage() {
           </div>
           {showCalendar && (
             <div>
-              <Calendar setDate={setDate} />
+              <Calendar setDate={handleSetDate} />
             </div>
           )}
           {/* Render TimePicker only if selected date is not in the past */}
@@ -96,7 +101,7 @@ export default function PlacePage() {
             place={place}
             selectedTime={selectedTime}
             checkoutTime={checkoutTime}
-            selectedDate={selectedDateObj.toLocaleDateString()}
+            selectedDate={selectedDateOnly}
           />
         </div>
       </div>
