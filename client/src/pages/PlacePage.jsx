@@ -6,6 +6,7 @@ import PlaceGallery from "../PlaceGallery";
 import AddressLink from "../AddressLink";
 import Calendar from "../Calendar";
 import TimePicker from "../TimePicker";
+import { DateTime } from "luxon";
 
 export default function PlacePage() {
   const { id } = useParams();
@@ -46,13 +47,12 @@ export default function PlacePage() {
 
   if (!place) return "";
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const isTodayOrFutureDate = date >= today;
+  const today = DateTime.now().startOf("day");
+// Create a new Date object using the selected date state
+const selectedDateObj = DateTime.fromISO(date).startOf("day");
+const isTodayOrFutureDate = selectedDateObj >= today;
+const selectedDateOnly = date.split("T")[0];
 
-  // Create a new Date object using the selected date state
-  const selectedDateObj = new Date(date);
-  const selectedDateOnly = selectedDateObj.toISOString().split("T")[0];
 
   return (
     <div className="mx-0 mt-4 bg-slate-100 px-8 pt-8 ">
@@ -86,7 +86,7 @@ export default function PlacePage() {
             <div>
               <TimePicker
                 onTimeSelect={handleSelectTime}
-                selectedDate={selectedDateObj}
+                selectedDate={selectedDateObj.toJSDate()}
                 onCheckoutTimeChange={handleCheckoutTime}
               />
             </div>

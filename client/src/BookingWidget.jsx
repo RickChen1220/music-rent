@@ -19,7 +19,8 @@ export default function BookingWidget({
 
   const selectedTimeObj = DateTime.fromFormat(selectedTime, "hh:mm");
   const checkoutTimeObj = DateTime.fromFormat(checkoutTime, "hh:mm");
-  const selectedDateObj = DateTime.fromISO(selectedDate).toJSDate();
+  const selectedDateObj = new Date(selectedDate);
+  const formattedSelectedDate = selectedDateObj.toLocaleDateString();
 
   useEffect(() => {
     if (user) {
@@ -73,7 +74,7 @@ export default function BookingWidget({
           <div>
             {selectedDate && (
               <div className=" py-3 px-4">
-                <p>Selected Date: {selectedDateObj.toDateString()}</p>
+                <p>Selected Date: {formattedSelectedDate}</p>
               </div>
             )}
           </div>
