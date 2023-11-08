@@ -117,14 +117,16 @@ export default function TimePicker({
     const isBooked = bookings.some(
       (booking) =>
         timeSlotObj >= DateTime.fromFormat(booking.checkIn, "HH:mm") &&
-        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm")
+        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm") &&
+        booking.date === selectedDate.toDateString()
     );
 
     // Check if the time slot is within the check-in and check-out range
     const isInCheckInOutRange = bookings.some(
       (booking) =>
         timeSlotObj >= DateTime.fromFormat(booking.checkIn, "HH:mm") &&
-        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm")
+        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm") &&
+        booking.date === selectedDate.toDateString()
     );
 
     checkoutTimeSlotsFiltered.push({
@@ -175,14 +177,16 @@ export default function TimePicker({
     const isBooked = bookings.some(
       (booking) =>
         timeSlotObj >= DateTime.fromFormat(booking.checkIn, "HH:mm") &&
-        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm")
+        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm") &&
+        booking.date === selectedDate.toDateString()
     );
 
     // Check if the time slot is within the check-in and check-out range
     const isInCheckInOutRange = bookings.some(
       (booking) =>
         timeSlotObj >= DateTime.fromFormat(booking.checkIn, "HH:mm") &&
-        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm")
+        timeSlotObj <= DateTime.fromFormat(booking.checkOut, "HH:mm") &&
+        booking.date === selectedDate.toDateString()
     );
 
     timeSlotsFiltered.push({
